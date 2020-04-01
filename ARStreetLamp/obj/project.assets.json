@@ -2,6 +2,41 @@
   "version": 3,
   "targets": {
     "MonoAndroid,Version=v9.0": {
+      "UrhoSharp/1.9.67": {
+        "type": "package",
+        "compile": {
+          "lib/monoandroid81/Urho.Droid.SdlBinding.dll": {},
+          "lib/monoandroid81/UrhoSharp.dll": {}
+        },
+        "runtime": {
+          "lib/monoandroid81/Urho.Droid.SdlBinding.dll": {},
+          "lib/monoandroid81/UrhoSharp.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win10-x64/native/mono-urho.dll": {
+            "assetType": "native",
+            "rid": "win10-x64"
+          },
+          "runtimes/win10-x86/native/mono-urho.dll": {
+            "assetType": "native",
+            "rid": "win10-x86"
+          }
+        }
+      },
+      "UrhoSharp.ARCore/1.9.67": {
+        "type": "package",
+        "dependencies": {
+          "UrhoSharp": "1.9.0"
+        },
+        "compile": {
+          "lib/monoandroid81/Urho.Droid.CoreAR.dll": {},
+          "lib/monoandroid81/Urho.Extensions.Droid.ARCore.dll": {}
+        },
+        "runtime": {
+          "lib/monoandroid81/Urho.Droid.CoreAR.dll": {},
+          "lib/monoandroid81/Urho.Extensions.Droid.ARCore.dll": {}
+        }
+      },
       "Xamarin.Android.Arch.Core.Common/1.1.1.3": {
         "type": "package",
         "dependencies": {
@@ -713,19 +748,66 @@
         "runtime": {
           "lib/monoandroid90/Xamarin.Essentials.dll": {}
         }
-      },
-      "Xamarin.Google.ARCore/1.15.0": {
-        "type": "package",
-        "compile": {
-          "lib/MonoAndroid70/Xamarin.Google.ARCore.dll": {}
-        },
-        "runtime": {
-          "lib/MonoAndroid70/Xamarin.Google.ARCore.dll": {}
-        }
       }
     }
   },
   "libraries": {
+    "UrhoSharp/1.9.67": {
+      "sha512": "q+RQ+Y7/OEtOlQNNtwvub0BWxPdZnvjYoKfShViA7umahgLbJOwF9V7fl1OMBrIk2T6MySvMnA6m//fB24o8oQ==",
+      "type": "package",
+      "path": "urhosharp/1.9.67",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/net45/UrhoSharp.targets",
+        "build/netcoreapp2.1/UrhoSharp.targets",
+        "build/uap10.0.16299/UrhoSharp.targets",
+        "build/xamarin.ios10/UrhoSharp.targets",
+        "lib/Xamarin.iOS10/UrhoSharp.XML",
+        "lib/Xamarin.iOS10/UrhoSharp.dll",
+        "lib/monoandroid81/Urho.Droid.SdlBinding.dll",
+        "lib/monoandroid81/UrhoSharp.XML",
+        "lib/monoandroid81/UrhoSharp.dll",
+        "lib/net45/UrhoSharp.XML",
+        "lib/net45/UrhoSharp.dll",
+        "lib/netcoreapp2.1/UrhoSharp.XML",
+        "lib/netcoreapp2.1/UrhoSharp.dll",
+        "lib/netstandard2.0/UrhoSharp.XML",
+        "lib/netstandard2.0/UrhoSharp.dll",
+        "lib/portable-net45 win8 wpa81/UrhoSharp.XML",
+        "lib/portable-net45 win8 wpa81/UrhoSharp.dll",
+        "lib/uap10.0.16299/UrhoSharp.XML",
+        "lib/uap10.0.16299/UrhoSharp.dll",
+        "native/Android/arm64-v8a/libmono-urho.so",
+        "native/Android/armeabi-v7a/libmono-urho.so",
+        "native/Android/armeabi/libmono-urho.so",
+        "native/Android/x86/libmono-urho.so",
+        "native/Android/x86_64/libmono-urho.so",
+        "native/CoreData.pak",
+        "native/Mac/libmono-urho.dylib",
+        "native/Win32_DirectX/mono-urho.dll",
+        "native/Win32_OpenGL/mono-urho.dll",
+        "native/Win64_DirectX/mono-urho.dll",
+        "native/Win64_OpenGL/mono-urho.dll",
+        "runtimes/win10-x64/native/mono-urho.dll",
+        "runtimes/win10-x86/native/mono-urho.dll",
+        "urhosharp.1.9.67.nupkg.sha512",
+        "urhosharp.nuspec"
+      ]
+    },
+    "UrhoSharp.ARCore/1.9.67": {
+      "sha512": "moOfyC8295Fn5SLYNUG4u9rfPAYQTr0kq2IDmLg40KYTa84zjepPKVJG/umDxrykQ/O9Z4iEd7YGLBXrbej8hg==",
+      "type": "package",
+      "path": "urhosharp.arcore/1.9.67",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/monoandroid81/Urho.Droid.CoreAR.dll",
+        "lib/monoandroid81/Urho.Extensions.Droid.ARCore.dll",
+        "urhosharp.arcore.1.9.67.nupkg.sha512",
+        "urhosharp.arcore.nuspec"
+      ]
+    },
     "Xamarin.Android.Arch.Core.Common/1.1.1.3": {
       "sha512": "ss+hnEoFeyxLgHk3TrCBqTMkK6ZJqhq382AONzdVGg7cyVibvBMWPX2Xp5byB8tvRJOMRIWZnqyqgpYQIagkZA==",
       "type": "package",
@@ -1482,29 +1564,16 @@
         "xamarin.essentials.1.5.2.nupkg.sha512",
         "xamarin.essentials.nuspec"
       ]
-    },
-    "Xamarin.Google.ARCore/1.15.0": {
-      "sha512": "YS2o70M8r1I7H0dDUqvMCqHxgBDlkI5jMD1YfR9KGgaTZ7s29bRlj8t18ezNhPwBKUpMEOQOmF1qU2HTQQ722g==",
-      "type": "package",
-      "path": "xamarin.google.arcore/1.15.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "THIRD-PARTY-NOTICES.txt",
-        "lib/MonoAndroid70/Xamarin.Google.ARCore.dll",
-        "xamarin.google.arcore.1.15.0.nupkg.sha512",
-        "xamarin.google.arcore.nuspec"
-      ]
     }
   },
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v9.0": [
+      "UrhoSharp >= 1.9.67",
+      "UrhoSharp.ARCore >= 1.9.67",
       "Xamarin.Android.Support.Core.Utils >= 28.0.0.3",
       "Xamarin.Android.Support.CustomTabs >= 28.0.0.3",
       "Xamarin.Android.Support.Design >= 28.0.0.3",
-      "Xamarin.Essentials >= 1.5.2",
-      "Xamarin.Google.ARCore >= 1.15.0"
+      "Xamarin.Essentials >= 1.5.2"
     ]
   },
   "packageFolders": {
@@ -1545,6 +1614,14 @@
     "frameworks": {
       "monoandroid90": {
         "dependencies": {
+          "UrhoSharp": {
+            "target": "Package",
+            "version": "[1.9.67, )"
+          },
+          "UrhoSharp.ARCore": {
+            "target": "Package",
+            "version": "[1.9.67, )"
+          },
           "Xamarin.Android.Support.Core.Utils": {
             "target": "Package",
             "version": "[28.0.0.3, )"
@@ -1560,10 +1637,6 @@
           "Xamarin.Essentials": {
             "target": "Package",
             "version": "[1.5.2, )"
-          },
-          "Xamarin.Google.ARCore": {
-            "target": "Package",
-            "version": "[1.15.0, )"
           }
         }
       }

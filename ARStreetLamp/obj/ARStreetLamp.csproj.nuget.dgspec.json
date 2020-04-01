@@ -38,6 +38,14 @@
       "frameworks": {
         "monoandroid90": {
           "dependencies": {
+            "UrhoSharp": {
+              "target": "Package",
+              "version": "[1.9.67, )"
+            },
+            "UrhoSharp.ARCore": {
+              "target": "Package",
+              "version": "[1.9.67, )"
+            },
             "Xamarin.Android.Support.Core.Utils": {
               "target": "Package",
               "version": "[28.0.0.3, )"
@@ -53,10 +61,6 @@
             "Xamarin.Essentials": {
               "target": "Package",
               "version": "[1.5.2, )"
-            },
-            "Xamarin.Google.ARCore": {
-              "target": "Package",
-              "version": "[1.15.0, )"
             }
           }
         }

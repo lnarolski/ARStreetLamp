@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "FH8WxLUm/gXhvkCoCgFXzcA/9rMA5zXnVmN3WZKV1Esuh2orKSQukRh92fKH92mZNY/5y6bgKiiCtuSojxOD4A==",
+  "dgSpecHash": "EQT2CRFPNa7SQak3PYxRSAQUbUt3ELURHuWRdirdLMJpgKCjJSwGMI2OrdRMUTv/TUyUf7SdSad3nRDsa1vNWA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Lukasz\\.nuget\\packages\\urhosharp\\1.9.67\\urhosharp.1.9.67.nupkg.sha512",
+    "C:\\Users\\Lukasz\\.nuget\\packages\\urhosharp.arcore\\1.9.67\\urhosharp.arcore.1.9.67.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.arch.core.common\\1.1.1.3\\xamarin.android.arch.core.common.1.1.1.3.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.arch.core.runtime\\1.1.1.3\\xamarin.android.arch.core.runtime.1.1.1.3.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.arch.lifecycle.common\\1.1.1.3\\xamarin.android.arch.lifecycle.common.1.1.1.3.nupkg.sha512",
@@ -39,8 +41,7 @@
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.support.vector.drawable\\28.0.0.3\\xamarin.android.support.vector.drawable.28.0.0.3.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.support.versionedparcelable\\28.0.0.3\\xamarin.android.support.versionedparcelable.28.0.0.3.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.support.viewpager\\28.0.0.3\\xamarin.android.support.viewpager.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\Lukasz\\.nuget\\packages\\xamarin.essentials\\1.5.2\\xamarin.essentials.1.5.2.nupkg.sha512",
-    "C:\\Users\\Lukasz\\.nuget\\packages\\xamarin.google.arcore\\1.15.0\\xamarin.google.arcore.1.15.0.nupkg.sha512"
+    "C:\\Users\\Lukasz\\.nuget\\packages\\xamarin.essentials\\1.5.2\\xamarin.essentials.1.5.2.nupkg.sha512"
   ],
   "logs": []
 }

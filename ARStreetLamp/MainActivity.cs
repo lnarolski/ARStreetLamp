@@ -3,7 +3,6 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
-using Google.AR.Core;
 
 namespace ARStreetLamp
 {
@@ -17,15 +16,7 @@ namespace ARStreetLamp
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            var config = Google.AR.Core.();
-            session = new Session(this);
 
-            // Make sure ARCore is supported on this device
-            if (!session.IsSupported(config))
-            {
-                Toast.MakeText(this, "ARCore unsupported!", ToastLength.Long).Show();
-                Finish();
-            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
