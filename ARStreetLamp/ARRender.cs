@@ -20,8 +20,8 @@ namespace ARStreetLamp
 		private Zone zone;
 		private Viewport viewport;
 		private bool scaling;
-		private object currentFrame;
-		private object fps;
+		private Frame currentFrame;
+		private MonoDebugHud fps;
 		private bool gammaCorrected;
 		Node lampNode;
 
@@ -63,10 +63,10 @@ namespace ARStreetLamp
 			// Mutant
 			lampNode = scene.CreateChild();
 			lampNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
-			lampNode.SetScale(1.0f);
+			lampNode.SetScale(0.01f);
 			var model = lampNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
-			model.Model = ResourceCache.GetModel("Models/Mutant.mdl");
+			model.Model = ResourceCache.GetModel("LampsModels/lamp2.mdl");
 			//model.Material = ResourceCache.GetMaterial("Materials/mutant_M.xml");
 			//var ani = lampNode.CreateComponent<AnimationController>();
 			//ani.Play("Animations/Mutant_HipHop1.ani", 0, true, 1f);
@@ -102,7 +102,7 @@ namespace ARStreetLamp
 			if (hitTest != null && hitTest.Count > 0)
 			{
 				var hitPos = hitTest[0].HitPose;
-				mutantNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
+				lampNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace ARStreetLamp
 				var state2 = Input.GetTouch(1);
 				var distance1 = IntVector2.Distance(state1.Position, state2.Position);
 				var distance2 = IntVector2.Distance(state1.LastPosition, state2.LastPosition);
-				mutantNode.SetScale(mutantNode.Scale.X + (distance1 - distance2) / 10000f);
+				lampNode.SetScale(lampNode.Scale.X + (distance1 - distance2) / 10000f);
 			}
 		}
 
@@ -132,13 +132,6 @@ namespace ARStreetLamp
 			var lightEstimate = arFrame.LightEstimate;
 			fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
 			zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
-		}
-
-		public void CorrectGamma()
-		{
-			if (!gammaCorrected)
-				viewport.RenderPath.Append(ResourceCache.GetXmlFile("PostProcess/MyGammaCorrection.xml"));
-			gammaCorrected = true;
 		}
 	}
 }

@@ -3,6 +3,10 @@ public class MonoPackageManager_Resources {
 	public static String[] Assemblies = new String[]{
 		/* We need to ensure that "ARStreetLamp.dll" comes first in this list. */
 		"ARStreetLamp.dll",
+		"Urho.Droid.CoreAR.dll",
+		"Urho.Droid.SdlBinding.dll",
+		"Urho.Extensions.Droid.ARCore.dll",
+		"UrhoSharp.dll",
 		"Xamarin.Android.Arch.Core.Common.dll",
 		"Xamarin.Android.Arch.Core.Runtime.dll",
 		"Xamarin.Android.Arch.Lifecycle.Common.dll",

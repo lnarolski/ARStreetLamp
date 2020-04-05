@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.arstreetlamp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.arstreetlamp" android:installLocation="auto">
   <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme" android:name="android.app.Application" android:debuggable="true">
-    <activity android:label="@string/app_name" android:theme="@style/AppTheme" android:name="crc64c8a5a5af67626084.MainActivity">
+  <uses-permission android:name="android.permission.CAMERA" />
+  <application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="ARStreetLamp" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme" android:name="android.app.Application" android:debuggable="true">
+    <activity android:label="ARStreetLamp" android:theme="@style/AppTheme" android:name="crc64c8a5a5af67626084.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity android:configChanges="keyboardHidden|orientation|screenSize" android:label="UrhoSharp" android:screenOrientation="unspecified" android:theme="@android:style/Theme.NoTitleBar" android:name="crc6433c09c76601fb7d0.FullscreenUrhoActivity" />
     <service android:name="crc64a98abb514ffad9f1.KeepAliveService" />
     <receiver android:enabled="true" android:exported="false" android:label="Essentials Battery Broadcast Receiver" android:name="crc64a0e0a82d0db9a07d.BatteryBroadcastReceiver" />
     <receiver android:enabled="true" android:exported="false" android:label="Essentials Energy Saver Broadcast Receiver" android:name="crc64a0e0a82d0db9a07d.EnergySaverBroadcastReceiver" />
@@ -26,5 +28,9 @@
         <category android:name="mono.android.intent.category.SEPPUKU.com.companyname.arstreetlamp" />
       </intent-filter>
     </receiver>
+    <!-- This activity is critical for installing ARCore when it is not already present. -->
+    <activity android:name="com.google.ar.core.InstallActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:excludeFromRecents="true" android:exported="false" android:launchMode="singleTop" android:theme="@android:style/Theme.Material.Light.Dialog.Alert" />
+    <!-- The minimal version code of ARCore APK required for an app using this SDK. -->
+    <meta-data android:name="com.google.ar.core.min_apk_version" android:value="180226000" />
   </application>
 </manifest>
