@@ -71,7 +71,7 @@ namespace ARStreetLamp
 			//var ani = lampNode.CreateComponent<AnimationController>();
 			//ani.Play("Animations/Mutant_HipHop1.ani", 0, true, 1f);
 
-			fps = new MonoDebugHud(this);
+			//fps = new MonoDebugHud(this);
 			//fps.Show(Color.Blue, 20);
 
 			// Add some post-processing (also, see CorrectGamma())
@@ -130,7 +130,7 @@ namespace ARStreetLamp
 
 			// Adjust our ambient light based on the light estimates ARCore provides each frame
 			var lightEstimate = arFrame.LightEstimate;
-			fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
+			//fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
 			zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
 		}
 	}
