@@ -19,21 +19,29 @@
         android:id="@+id/gridLayout"
         android:columnCount="3"
         android:rowCount="3">
-        <Button
+        <ToggleButton
             android:layout_row="0"
             android:layout_column="0"
-            android:text="ON/OFF\nHUD"
+            android:textOn="TURN OFF\nHUD"
+            android:textOff="TURN ON\nHUD"
+            android:checked="false"
             android:id="@+id/hudButton"/>
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ToggleButton
+            android:layout_row="0"
+            android:layout_column="1"
+            android:textOn="TURN OFF\nPOLE"
+            android:textOff="TURN ON\nPOLE"
             android:layout_columnWeight="1"
-            android:layout_rowWeight="1"/>
-        <Button
+            android:gravity="center"
+            android:visibility="invisible"
+            android:id="@+id/poleButton"/>
+        <ToggleButton
             android:layout_row="0"
             android:layout_column="2"
-            android:text="ON/OFF\nLAMP"
+            android:textOn="TURN OFF\nLAMP"
+            android:textOff="TURN ON\nLAMP"
             android:gravity="center"
+            android:visibility="invisible"
             android:id="@+id/lightButton"/>
          <FrameLayout
             android:layout_row="1"
@@ -47,6 +55,8 @@
                 android:layout_width="435dp"
                 android:layout_height="85dp" 
                 android:layout_gravity="center"
+                android:max="1000"
+                android:visibility="invisible"
                 android:rotation="270"/>
         </FrameLayout>
         <SeekBar
@@ -57,6 +67,7 @@
             android:id="@+id/rotateSeekBar"
             android:layout_gravity="fill_horizontal"
             android:max="359"
+            android:visibility="invisible"
             android:layout_marginBottom="20dp"/>
     </GridLayout>
 </RelativeLayout>

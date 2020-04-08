@@ -266,3 +266,4 @@ string;obj\Debug\90\res\values\strings.xml
 style;obj\Debug\90\res\values\styles.xml
 TextView;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\layout\__arcore_education.xml
 TextView;obj\Debug\90\res\layout\activity_main.xml
+ToggleButton;obj\Debug\90\res\layout\activity_main.xml

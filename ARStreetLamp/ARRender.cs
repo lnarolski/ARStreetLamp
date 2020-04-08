@@ -24,6 +24,12 @@ namespace ARStreetLamp
 		private MonoDebugHud fps;
 		private bool gammaCorrected;
 		Node lampNode;
+		float yPosition;
+
+		public ToggleButton poleButton;
+		public ToggleButton lightButton;
+		public SeekBar heightSeekBar;
+		public SeekBar rotateSeekBar;
 
 		public ARCoreComponent ArCore { get; private set; }
 
@@ -60,14 +66,16 @@ namespace ARStreetLamp
 			ArCore.ConfigRequested += ArCore_ConfigRequested;
 			ArCore.Run();
 
-			// Mutant
+			// Lamp
 			lampNode = scene.CreateChild();
 			lampNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
+			yPosition = -0.5f;
 			lampNode.SetScale(0.01f);
 			var model = lampNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
-			model.Model = ResourceCache.GetModel("LampsModels/lamp2.mdl");
-			//model.Material = ResourceCache.GetMaterial("Materials/mutant_M.xml");
+			model.Model = ResourceCache.GetModel("LampsModels/street_lamp.mdl");
+			model.Material = ResourceCache.GetMaterial("LampsMaterials/glass.xml");
+			model.Material = ResourceCache.GetMaterial("LampsMaterials/metal.xml");
 			//var ani = lampNode.CreateComponent<AnimationController>();
 			//ani.Play("Animations/Mutant_HipHop1.ani", 0, true, 1f);
 
@@ -103,6 +111,8 @@ namespace ARStreetLamp
 			{
 				var hitPos = hitTest[0].HitPose;
 				lampNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
+				yPosition = hitPos.Ty();
+				heightSeekBar.Progress = 0;
 			}
 		}
 
@@ -132,6 +142,42 @@ namespace ARStreetLamp
 			var lightEstimate = arFrame.LightEstimate;
 			//fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
 			zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
+		}
+
+		public void PrepareInterface()
+		{
+			poleButton.Click += PoleButton_Click;
+			lightButton.Click += LightButton_Click;
+
+			rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
+			heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
+		}
+
+		private void HeightSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
+		{
+			lampNode.Position = new Vector3(lampNode.Position.X, yPosition + (float) e.Progress / 100, lampNode.Position.Z);
+		}
+
+		private void RotateSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
+		{
+			lampNode.Rotation = new Quaternion(0, e.Progress, 0);
+		}
+
+		private void LightButton_Click(object sender, EventArgs e)
+		{
+			if (lightButton.Checked)
+			{
+
+			}
+			else
+			{
+
+			}
+		}
+
+		private void PoleButton_Click(object sender, EventArgs e)
+		{
+			
 		}
 	}
 }

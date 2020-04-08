@@ -19,6 +19,7 @@ namespace ARStreetLamp
         ARRender arrender;
         RelativeLayout placeholder;
         UrhoSurfacePlaceholder surface;
+        ToggleButton hudButton;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,6 +29,14 @@ namespace ARStreetLamp
             SetContentView(Resource.Layout.activity_main);
 
             placeholder = FindViewById<RelativeLayout>(Resource.Id.UrhoSurfacePlaceHolder);
+
+            hudButton = FindViewById<ToggleButton>(Resource.Id.hudButton);
+            hudButton.Click += (o, e) => {
+                if (hudButton.Checked)
+                    ChangeVisibilityOfHUD(true);
+                else
+                    ChangeVisibilityOfHUD(false);
+            };
 
             LaunchUrho();
         }
@@ -52,7 +61,16 @@ namespace ARStreetLamp
                     ResourcePaths = new[] { "LampsData" }
                 });
 
+            arrender.poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
+            arrender.lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
+            arrender.heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
+            arrender.rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+
+            arrender.PrepareInterface();
+
             SetTitle(Resource.String.app_name);
+
+            //hudButton.PerformClick();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -92,6 +110,29 @@ namespace ARStreetLamp
         {
             UrhoSurface.OnLowMemory();
             base.OnLowMemory();
+        }
+
+        private void ChangeVisibilityOfHUD(bool state)
+        {
+            ToggleButton poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
+            ToggleButton lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
+            SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
+            SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+
+            if (state)
+            {
+                poleButton.Visibility = Android.Views.ViewStates.Visible;
+                lightButton.Visibility = Android.Views.ViewStates.Visible;
+                heightSeekBar.Visibility = Android.Views.ViewStates.Visible;
+                rotateSeekBar.Visibility = Android.Views.ViewStates.Visible;
+            }
+            else
+            {
+                poleButton.Visibility = Android.Views.ViewStates.Invisible;
+                lightButton.Visibility = Android.Views.ViewStates.Invisible;
+                heightSeekBar.Visibility = Android.Views.ViewStates.Invisible;
+                rotateSeekBar.Visibility = Android.Views.ViewStates.Invisible;
+            }
         }
     }
 }
