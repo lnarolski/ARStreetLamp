@@ -55,7 +55,7 @@
                 android:layout_width="435dp"
                 android:layout_height="85dp" 
                 android:layout_gravity="center"
-                android:max="1000"
+                android:max="100"
                 android:visibility="visible"
                 android:rotation="270"/>
         </FrameLayout>

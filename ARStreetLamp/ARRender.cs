@@ -70,17 +70,17 @@ namespace ARStreetLamp
 			lampNode = scene.CreateChild();
 			lampNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
 			yPosition = -0.5f;
-			lampNode.SetScale(0.01f);
+			lampNode.SetScale(1.0f);
 			var model = lampNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
 			//model.Model = ResourceCache.GetModel("LampsModels/street_lamp.mdl");
-			//model.Material = ResourceCache.GetMaterial("LampsMaterials/glass.xml");
-			//model.Material = ResourceCache.GetMaterial("LampsMaterials/metal.xml");
+			//model.Material = ResourceCache.GetMaterial("LampsMaterials/glass2.xml");
+			//model.Material = ResourceCache.GetMaterial("LampsMaterials/metal2.xml");
 
 			model.Model = ResourceCache.GetModel("LampsModels/lamp.mdl");
-			model.Material = ResourceCache.GetMaterial("LampsMaterials/Aluminum_Cast.xml");
-			model.Material = ResourceCache.GetMaterial("LampsMaterials/No_Tint.xml");
-			model.Material = ResourceCache.GetMaterial("LampsMaterials/Tinted_-_Blue.xml");
+			model.Material = ResourceCache.GetMaterial("LampsMaterials/Glass.xml");
+			model.Material = ResourceCache.GetMaterial("LampsMaterials/Mirror.xml");
+			model.Material = ResourceCache.GetMaterial("LampsMaterials/Metal.xml");
 			//var ani = lampNode.CreateComponent<AnimationController>();
 			//ani.Play("Animations/Mutant_HipHop1.ani", 0, true, 1f);
 

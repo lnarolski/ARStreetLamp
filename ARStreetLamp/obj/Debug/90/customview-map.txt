@@ -179,7 +179,6 @@ resources;obj\Debug\90\res\values\ic_launcher_background.xml
 resources;obj\Debug\90\res\values\strings.xml
 resources;obj\Debug\90\res\values\styles.xml
 SeekBar;obj\Debug\90\res\layout\activity_main.xml
-Space;obj\Debug\90\res\layout\activity_main.xml
 string;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values\values.xml
 string;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values-af\values.xml
 string;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values-am\values.xml
