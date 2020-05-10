@@ -12,6 +12,7 @@ using Android.Widget;
 using Urho;
 using Urho.Droid;
 using Com.Google.AR.Core;
+using Java.Util;
 
 namespace ARStreetLamp
 {
@@ -119,21 +120,17 @@ namespace ARStreetLamp
 
 			//Lamp light
 			lampLightNode = scene.CreateChild();
-			//lampLightNode.Position = new Vector3(x, y, z);
 			lampLightNode.Rotation = new Quaternion(90.0f, 0.0f, 0.0f);
-			lampLightNode.SetScale(objectsScale);
-			//model = lampLightNode.CreateComponent<StaticModel>();
-			//model.Model = ResourceCache.GetModel("Cel/Sphere.mdl");
 
 			lampLightLight = lampLightNode.CreateComponent<Light>();
-			lampLightLight.Brightness = 0;
 			lampLightLight.LightType = LightType.Point;
 			lampLightLight.CastShadows = true;
 			lampLightLight.Length = 1;
 			lampLightLight.Range = 1;
-			lampLightLight.Fov = 140.0f;
+			lampLightLight.Fov = 160.0f;
 			lampLightLight.AspectRatio = 1.05f;
-			lampLightLight.Temperature = 4000.0f;
+			lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
+			lampLightLight.Brightness = 0.0f;
 
 			//fps = new MonoDebugHud(this);
 			//fps.Show(Color.Blue, 20);
@@ -177,6 +174,9 @@ namespace ARStreetLamp
 					lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
 				}
 
+				if (poleNode != null)
+					PoleButton_Click(null, null);
+
 				yPosition = hitPos.Ty();
 				heightSeekBar.Progress = 0;
 			}
@@ -197,12 +197,13 @@ namespace ARStreetLamp
 				glassNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				lensesNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				mirrorNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
-				//lampLightNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 
 				var components = glassNode.Components.GetEnumerator();
 				if (components.MoveNext())
 				{
-					lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+					Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+					centerOfGlass.Y -= 0.1f * objectsScale;
+					lampLightNode.Position = centerOfGlass;
 				}
 			}
 		}
@@ -239,7 +240,9 @@ namespace ARStreetLamp
 			var components = glassNode.Components.GetEnumerator();
 			if (components.MoveNext())
 			{
-				lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				centerOfGlass.Y -= 0.1f * objectsScale;
+				lampLightNode.Position = centerOfGlass;
 			}
 		}
 
@@ -254,7 +257,9 @@ namespace ARStreetLamp
 			var components = glassNode.Components.GetEnumerator();
 			if (components.MoveNext())
 			{
-				lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				centerOfGlass.Y -= 0.1f * objectsScale;
+				lampLightNode.Position = centerOfGlass;
 			}
 		}
 
@@ -263,12 +268,14 @@ namespace ARStreetLamp
 			var components = glassNode.Components.GetEnumerator();
 			if (components.MoveNext())
 			{
-				lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+				centerOfGlass.Y -= 0.1f * objectsScale;
+				lampLightNode.Position = centerOfGlass;
 			}
 
 			if (lightButton.Checked)
 			{
-				lampLightLight.Brightness = 10000;
+				lampLightLight.Brightness = 0.1f;
 			}
 			else
 			{
@@ -283,12 +290,8 @@ namespace ARStreetLamp
 				if (poleButton.Checked)
 				{
 					poleStandNode = scene.CreateChild();
-					//poleStandNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
-					//poleStandNode.SetScale(poleObjectsScale * objectsScale);
-
-					poleStandNode.Position = new Vector3(bodyNode.Position.X, yPosition + 0.1f, bodyNode.Position.Z);
-					poleStandNode.Scale = new Vector3(0.08488f, 0.1f, 0.08488f);
-
+					poleStandNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
+					poleStandNode.SetScale(poleObjectsScale * objectsScale);
 					var model = poleStandNode.CreateComponent<StaticModel>();
 					model.CastShadows = true;
 					model.Model = ResourceCache.GetModel("standardPole/poleStand.mdl");
@@ -296,33 +299,27 @@ namespace ARStreetLamp
 
 
 					poleStandNutsNode = scene.CreateChild();
-
-					//poleStandNutsNode.Position = new Vector3(bodyNode.Position.X - 0.118844f, yPosition + 0.0509366f, bodyNode.Position.Z - 0.117035f);
-					poleStandNutsNode.Position = new Vector3(bodyNode.Position.X - 0.118844f, yPosition + 0.0509366f, bodyNode.Position.Z - 0.117035f);
-					poleStandNutsNode.Rotation = new Quaternion(-1.86694e-05f, -180.0f, 180.0f);
-					poleStandNutsNode.Scale = new Vector3(0.010122f, 0.010122f, 0.010122f);
-
-					//poleStandNutsNode.SetScale(poleObjectsScale * objectsScale * 0.1f);
-					poleStandNutsNode.SetScale(poleObjectsScale * objectsScale);
+					poleStandNutsNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
+					poleStandNutsNode.SetScale(poleObjectsScale * objectsScale * 12.0f);
 					model = poleStandNutsNode.CreateComponent<StaticModel>();
 					model.CastShadows = true;
 					model.Model = ResourceCache.GetModel("standardPole/poleStandNuts.mdl");
 					model.Material = ResourceCache.GetMaterial("standardPole/poleStandNuts.xml");
 
 
-					//poleNode = scene.CreateChild();
-					//poleNode.Scale = new Vector3(1.0f, poleObjectsScale * ((yPosition + (float)heightSeekBar.Progress / 100) / 2), 1.0f);
-					//poleNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
-					//model = poleNode.CreateComponent<StaticModel>();
-					//model.CastShadows = true;
-					//model.Model = ResourceCache.GetModel("standardPole/Pole.mdl");
-					//model.Material = ResourceCache.GetMaterial("standardPole/Pole.xml");
+					poleNode = scene.CreateChild();
+					poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, poleObjectsScale * objectsScale * (float)heightSeekBar.Progress / 8.0f, poleObjectsScale * objectsScale);
+					poleNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
+					model = poleNode.CreateComponent<StaticModel>();
+					model.CastShadows = true;
+					model.Model = ResourceCache.GetModel("standardPole/Pole.mdl");
+					model.Material = ResourceCache.GetMaterial("standardPole/Pole.xml");
 				}
 				else
 				{
 					poleStandNode.Remove();
 					poleStandNutsNode.Remove();
-					//poleNode.Remove();
+					poleNode.Remove();
 				}
 			});
 		}

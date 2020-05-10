@@ -5,7 +5,7 @@
 		<attribute name="Name" value="Scene"/>
 		<node id="16777217">
 			<attribute name="Name" value="Pole"/>
-			<attribute name="Position" value="0 1 0"/>
+			<attribute name="Position" value="0 0 0"/>
 			<attribute name="Rotation" value="1 -0 -0 -0"/>
 			<attribute name="Scale" value="0.08488 1 0.08488"/>
 			<attribute name="Variables"/>
