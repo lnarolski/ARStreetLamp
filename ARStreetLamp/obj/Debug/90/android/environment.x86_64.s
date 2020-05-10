@@ -2,8 +2,8 @@
 	.section	.rodata..L.str.1,"aMS",@progbits,1
 	.type	.L.str.1, @object
 .L.str.1:
-	.asciz	"com.companyname.arstreetlamp"
-	.size	.L.str.1, 29
+	.asciz	"pl.lnarolski.arstreetlamp"
+	.size	.L.str.1, 26
 	.section	.data.application_config,"aw",@progbits
 	.type	application_config, @object
 	.p2align	3
@@ -69,7 +69,7 @@ mono_aot_mode_name:
 	.section	.rodata..L.str.8,"aMS",@progbits,1
 	.type	.L.str.8, @object
 .L.str.8:
-	.asciz	"74df49d1-417d-4d50-9558-4739d1c40a9d"
+	.asciz	"686b6fd6-83a8-4326-a8db-31812f335bc0"
 	.size	.L.str.8, 37
 	.section	.rodata..L.str.9,"aMS",@progbits,1
 	.type	.L.str.9, @object

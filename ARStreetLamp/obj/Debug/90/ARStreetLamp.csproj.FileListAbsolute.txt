@@ -1,12 +1,13 @@
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\ARStreetLamp.dll
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\ARStreetLamp.pdb
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\com.companyname.arstreetlamp.apk
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\com.companyname.arstreetlamp.aab
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\com.companyname.arstreetlamp-Signed.aab
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\com.companyname.arstreetlamp-Signed.apk
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\pl.lnarolski.arstreetlamp.apk
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\pl.lnarolski.arstreetlamp.aab
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\pl.lnarolski.arstreetlamp-Signed.aab
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\pl.lnarolski.arstreetlamp-Signed.apk
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\MonoAndroid,Version=v9.0.AssemblyAttributes.cs
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\build.props
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\adb.props
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.csprojAssemblyReference.cache
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\_VerifyXamarinAndroidSupportVersions.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_BuildLibraryImportsCache.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\res.flag
@@ -38,10 +39,10 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\R.cs.flag
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.csproj.CoreCompileInputs.cache
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.dll
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.pdb
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\com.companyname.arstreetlamp.apk
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\pl.lnarolski.arstreetlamp.apk
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\base.zip
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\com.companyname.arstreetlamp.aab
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\com.companyname.arstreetlamp.apks
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\pl.lnarolski.arstreetlamp.aab
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\pl.lnarolski.arstreetlamp.apks
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\res\layout\activity_main.xml
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\res\values\colors.xml
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\res\values\ic_launcher_background.xml
@@ -245,7 +246,7 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\MonoPackageManager_Resources.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\xamarin\essentials\fileProvider.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\bin\packaged_resources
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\com\companyname\arstreetlamp\R.java
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\pl\lnarolski\arstreetlamp\R.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemap.jm.arm64-v8a.o
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemap.mj.arm64-v8a.o
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemap.jm.armeabi-v7a.o
@@ -271,4 +272,3 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_Conve
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GenerateJavaStubs.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_ResolveLibraryProjectImports.stamp
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.csprojAssemblyReference.cache

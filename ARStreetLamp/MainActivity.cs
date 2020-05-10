@@ -9,6 +9,8 @@ using Android.Support.V4.Content;
 using Android.Support.V4.App;
 using Android;
 using Android.Content.PM;
+using Android.Util;
+using Android.Views;
 
 namespace ARStreetLamp
 {
@@ -39,6 +41,22 @@ namespace ARStreetLamp
             };
 
             LaunchUrho();
+
+            SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
+            SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+            FrameLayout rotateSeekBarFL = FindViewById<FrameLayout>(Resource.Id.rotateSeekBarFL);
+            FrameLayout heightSeekBarFL = FindViewById<FrameLayout>(Resource.Id.heightSeekBarFL);
+
+            var displayMetrics = Resources.DisplayMetrics;
+            int height = displayMetrics.HeightPixels;
+            int width = displayMetrics.WidthPixels;
+
+            rotateSeekBar.LayoutParameters.Width = (int)(width * 0.9);
+            rotateSeekBar.LayoutParameters.Height = (int)(height * 0.3);
+            rotateSeekBarFL.SetPadding((int)(width * 0.05), (int)(height * 0.7), 0, 0);
+
+            heightSeekBar.LayoutParameters.Width = (int)(width * 1.1);
+            heightSeekBar.LayoutParameters.Height = (int)(height * 0.2);
         }
 
         private async System.Threading.Tasks.Task LaunchUrho()
@@ -58,7 +76,7 @@ namespace ARStreetLamp
             arrender = await surface.Show<ARRender>(
                 new Urho.ApplicationOptions
                 {
-                    ResourcePaths = new[] { "LampsData" }
+                    ResourcePaths = new[] { "Cel", "standardPole" }
                 });
 
             arrender.poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);

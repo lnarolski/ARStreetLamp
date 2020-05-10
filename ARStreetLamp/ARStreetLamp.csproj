@@ -66,8 +66,14 @@
     <Compile Include="Resources\Resource.designer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsModels\street_lamp.mdl" />
-    <AndroidAsset Include="Assets\LampsData\LampsModels\lamp.mdl" />
+    <AndroidAsset Include="Assets\Cel\Body.mdl" />
+    <AndroidAsset Include="Assets\Cel\Glass.mdl" />
+    <AndroidAsset Include="Assets\Cel\Lenses.mdl" />
+    <AndroidAsset Include="Assets\Cel\Mirror.mdl" />
+    <AndroidAsset Include="Assets\standardPole\poleStandNuts.mdl" />
+    <AndroidAsset Include="Assets\standardPole\poleStand.mdl" />
+    <AndroidAsset Include="Assets\standardPole\Pole.mdl" />
+    <AndroidAsset Include="Assets\Cel\Sphere.mdl" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -114,19 +120,37 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsMaterials\glass2.xml" />
+    <AndroidAsset Include="Assets\Cel\bodyLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsMaterials\metal2.xml" />
+    <AndroidAsset Include="Assets\Cel\glassLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsMaterials\Metal.xml" />
+    <AndroidAsset Include="Assets\Cel\lensesLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsMaterials\Mirror.xml" />
+    <AndroidAsset Include="Assets\Cel\mirrorLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\LampsData\LampsMaterials\Glass.xml" />
+    <AndroidAsset Include="Assets\Cel\Scene.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\Pole.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\poleStand.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\poleStandNuts.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\poleScene.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\poleStandScene.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Cel\waterMirrorLamp.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

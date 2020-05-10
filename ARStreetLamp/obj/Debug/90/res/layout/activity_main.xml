@@ -1,2 +1,80 @@
 
-  <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android"><RelativeLayout android:id="@+id/UrhoSurfacePlaceHolder" android:background="@android:color/white" android:layout_width="match_parent" android:layout_height="match_parent"></RelativeLayout><GridLayout android:minHeight="100px" android:minWidth="100px" android:layout_width="match_parent" android:layout_height="match_parent" android:useDefaultMargins="true" android:id="@+id/gridLayout" android:columnCount="3" android:rowCount="3"><ToggleButton android:layout_row="0" android:layout_column="0" android:textOn="TURN OFF\nHUD" android:textOff="TURN ON\nHUD" android:checked="false" android:id="@+id/hudButton" /><ToggleButton android:layout_row="0" android:layout_column="1" android:textOn="TURN OFF\nPOLE" android:textOff="TURN ON\nPOLE" android:layout_columnWeight="1" android:gravity="center" android:visibility="visible" android:id="@+id/poleButton" /><ToggleButton android:layout_row="0" android:layout_column="2" android:textOn="TURN OFF\nLAMP" android:textOff="TURN ON\nLAMP" android:gravity="center" android:visibility="visible" android:id="@+id/lightButton" /><FrameLayout android:layout_row="1" android:layout_column="2" android:layout_width="85dp" android:layout_height="435dp" android:orientation="vertical"><SeekBar android:id="@+id/heightSeekBar" android:layout_width="435dp" android:layout_height="85dp" android:layout_gravity="center" android:max="100" android:visibility="visible" android:rotation="270" /></FrameLayout><SeekBar android:layout_row="2" android:layout_column="0" android:layout_rowSpan="1" android:layout_columnSpan="3" android:id="@+id/rotateSeekBar" android:layout_gravity="fill_horizontal" android:max="359" android:visibility="visible" android:layout_marginBottom="20dp" /></GridLayout></RelativeLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/UrhoSurfacePlaceHolder"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </RelativeLayout>
+
+    <GridLayout
+        android:minHeight="100px"
+        android:minWidth="100px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:useDefaultMargins="true"
+        android:id="@+id/gridLayout"
+        android:columnCount="3"
+        android:rowCount="3">
+        <ToggleButton
+            android:layout_row="0"
+            android:layout_column="0"
+            android:textOn="TURN OFF\nHUD"
+            android:textOff="TURN ON\nHUD"
+            android:checked="false"
+            android:id="@+id/hudButton"/>
+        <ToggleButton
+            android:layout_row="0"
+            android:layout_column="1"
+            android:textOn="TURN OFF\nPOLE"
+            android:textOff="TURN ON\nPOLE"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:visibility="visible"
+            android:id="@+id/poleButton"/>
+        <ToggleButton
+            android:layout_row="0"
+            android:layout_column="2"
+            android:textOn="TURN OFF\nLAMP"
+            android:textOff="TURN ON\nLAMP"
+            android:gravity="center"
+            android:visibility="visible"
+            android:id="@+id/lightButton"/>
+        <FrameLayout
+            android:layout_row="1"
+            android:layout_column="2"
+            android:layout_width="85dp"
+            android:layout_height="435dp"
+            android:orientation="vertical"
+            android:id="@+id/heightSeekBarFL">
+
+            <SeekBar
+                android:id="@+id/heightSeekBar"
+                android:layout_width="435dp"
+                android:layout_height="85dp" 
+                android:layout_gravity="center"
+                android:max="1000"
+                android:visibility="visible"
+                android:rotation="270"/>
+        </FrameLayout>
+    </GridLayout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rotateSeekBarFL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <SeekBar
+            android:id="@+id/rotateSeekBar"
+            android:max="359"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </FrameLayout>
+</RelativeLayout>
