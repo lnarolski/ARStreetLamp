@@ -83,12 +83,11 @@ namespace ARStreetLamp
             arrender.lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
             arrender.heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
             arrender.rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+            arrender.mainActivity = this;
 
             arrender.PrepareInterface();
 
             SetTitle(Resource.String.app_name);
-
-            //hudButton.PerformClick();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

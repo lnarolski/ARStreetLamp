@@ -46,6 +46,9 @@ namespace ARStreetLamp
 		private Node poleStandNode;
 		private Node poleStandNutsNode;
 
+		public Activity mainActivity;
+		Toast toast;
+
 		public ARCoreComponent ArCore { get; private set; }
 
 		public ARRender(ApplicationOptions options) : base(options) { }
@@ -174,11 +177,18 @@ namespace ARStreetLamp
 					lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
 				}
 
-				if (poleNode != null)
-					PoleButton_Click(null, null);
-
 				yPosition = hitPos.Ty();
 				heightSeekBar.Progress = 0;
+
+				if (poleNode != null)
+				{
+					if (!poleNode.IsDeleted)
+					{
+						poleStandNode.Remove();
+						poleStandNutsNode.Remove();
+						poleNode.Remove();
+					}
+				}
 			}
 		}
 
@@ -197,6 +207,15 @@ namespace ARStreetLamp
 				glassNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				lensesNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				mirrorNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
+
+				mainActivity.RunOnUiThread(() => {
+					if (toast != null)
+					{
+						toast.Cancel();
+					}
+					toast = Toast.MakeText(Android.App.Application.Context, "Scale: " + bodyNode.Scale.X, ToastLength.Long);
+					toast.Show();
+				});
 
 				var components = glassNode.Components.GetEnumerator();
 				if (components.MoveNext())
@@ -317,9 +336,12 @@ namespace ARStreetLamp
 				}
 				else
 				{
-					poleStandNode.Remove();
-					poleStandNutsNode.Remove();
-					poleNode.Remove();
+					if (!poleNode.IsDeleted)
+					{
+						poleStandNode.Remove();
+						poleStandNutsNode.Remove();
+						poleNode.Remove();
+					}
 				}
 			});
 		}
