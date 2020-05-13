@@ -74,6 +74,9 @@
     <AndroidAsset Include="Assets\standardPole\poleStand.mdl" />
     <AndroidAsset Include="Assets\standardPole\poleStandNuts.mdl" />
     <AndroidAsset Include="Assets\standardPole\Pole.mdl" />
+    <AndroidAsset Include="Assets\Cel\Base.mdl" />
+    <AndroidAsset Include="Assets\standardPole\poleStandSmooth.mdl" />
+    <AndroidAsset Include="Assets\standardPole\poleSmooth.mdl" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />

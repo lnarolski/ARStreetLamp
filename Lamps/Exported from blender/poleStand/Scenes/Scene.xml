@@ -33,5 +33,20 @@
 				<attribute name="Material" value="Material;Materials/poleStandNuts.xml"/>
 			</component>
 		</node>
+		<node id="16777219">
+			<attribute name="Name" value="poleStandSmooth"/>
+			<attribute name="Position" value="0 0 0"/>
+			<attribute name="Rotation" value="1 -0 -0 -0"/>
+			<attribute name="Scale" value="0.08488 0.1 0.08488"/>
+			<attribute name="Variables"/>
+			<attribute name="Tags">
+				<string value="Collection"/>
+				<string value="Collection_recursive"/>
+			</attribute>
+			<component id="16777218" type="StaticModel">
+				<attribute name="Model" value="Model;Models/poleStandSmooth.mdl"/>
+				<attribute name="Material" value="Material;Materials/poleStand.xml"/>
+			</component>
+		</node>
 	</node>
 </scene>

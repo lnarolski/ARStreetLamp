@@ -25,21 +25,23 @@ namespace ARStreetLamp
 		private MonoDebugHud fps;
 		private bool gammaCorrected;
 
-		Node bodyNode;
-		Node glassNode;
-		Node lensesNode;
-		Node mirrorNode;
+		private Node bodyNode;
+		private Node glassNode;
+		private Node lensesNode;
+		private Node mirrorNode;
+		private Node baseNode;
 
-		Node lampLightNode;
-		Light lampLightLight;
+		private Node lampLightNode;
+		private Light lampLightLight;
 
-		float yPosition;
+		private float yPosition;
 
 		public ToggleButton poleButton;
 		public ToggleButton lightButton;
 		public SeekBar heightSeekBar;
 		public SeekBar rotateSeekBar;
-		private float objectsScale = 0.5f;
+
+		private float objectsScale = 0.4674199f;
 		private float poleObjectsScale = 0.085f;
 		private Scene scene;
 		private Node poleNode;
@@ -47,7 +49,7 @@ namespace ARStreetLamp
 		private Node poleStandNutsNode;
 
 		public Activity mainActivity;
-		Toast toast;
+		private Toast toast;
 
 		public ARCoreComponent ArCore { get; private set; }
 
@@ -87,18 +89,26 @@ namespace ARStreetLamp
 			// Lamp
 			StaticModel model;
 
-			yPosition = -0.5f;
+			yPosition = 0.0f;
 
 			bodyNode = scene.CreateChild();
-			bodyNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
+			bodyNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
 			bodyNode.SetScale(objectsScale);
 			model = bodyNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
 			model.Model = ResourceCache.GetModel("Cel/Body.mdl");
 			model.Material = ResourceCache.GetMaterial("Cel/bodyLamp.xml");
 
+			baseNode = scene.CreateChild();
+			baseNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+			baseNode.SetScale(objectsScale);
+			model = baseNode.CreateComponent<StaticModel>();
+			model.CastShadows = true;
+			model.Model = ResourceCache.GetModel("Cel/Base.mdl");
+			model.Material = ResourceCache.GetMaterial("Cel/bodyLamp.xml");
+
 			glassNode = scene.CreateChild();
-			glassNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
+			glassNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
 			glassNode.SetScale(objectsScale);
 			model = glassNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
@@ -106,7 +116,7 @@ namespace ARStreetLamp
 			model.Material = ResourceCache.GetMaterial("Cel/glassLamp.xml");
 
 			lensesNode = scene.CreateChild();
-			lensesNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
+			lensesNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
 			lensesNode.SetScale(objectsScale);
 			model = lensesNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
@@ -114,7 +124,7 @@ namespace ARStreetLamp
 			model.Material = ResourceCache.GetMaterial("Cel/lensesLamp.xml");
 
 			mirrorNode = scene.CreateChild();
-			mirrorNode.Position = new Vector3(0, -0.5f, 0.5f); // 50cm Y, 50cm Z
+			mirrorNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
 			mirrorNode.SetScale(objectsScale);
 			model = mirrorNode.CreateComponent<StaticModel>();
 			model.CastShadows = true;
@@ -127,13 +137,14 @@ namespace ARStreetLamp
 
 			lampLightLight = lampLightNode.CreateComponent<Light>();
 			lampLightLight.LightType = LightType.Point;
-			lampLightLight.CastShadows = true;
 			lampLightLight.Length = 1;
-			lampLightLight.Range = 1;
+			lampLightLight.Range = 0.8f;
 			lampLightLight.Fov = 160.0f;
 			lampLightLight.AspectRatio = 1.05f;
 			lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
 			lampLightLight.Brightness = 0.0f;
+			lampLightLight.CastShadows = true;
+			lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
 
 			//fps = new MonoDebugHud(this);
 			//fps.Show(Color.Blue, 20);
@@ -170,6 +181,7 @@ namespace ARStreetLamp
 				glassNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
 				lensesNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
 				mirrorNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
+				baseNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
 
 				var components = glassNode.Components.GetEnumerator();
 				if (components.MoveNext())
@@ -207,6 +219,7 @@ namespace ARStreetLamp
 				glassNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				lensesNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 				mirrorNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
+				baseNode.SetScale(bodyNode.Scale.X + (distance1 - distance2) / 10000f);
 
 				mainActivity.RunOnUiThread(() => {
 					if (toast != null)
@@ -255,6 +268,7 @@ namespace ARStreetLamp
 			glassNode.Position = new Vector3(glassNode.Position.X, yPosition + (float)e.Progress / 100, glassNode.Position.Z);
 			lensesNode.Position = new Vector3(lensesNode.Position.X, yPosition + (float)e.Progress / 100, lensesNode.Position.Z);
 			mirrorNode.Position = new Vector3(mirrorNode.Position.X, yPosition + (float)e.Progress / 100, mirrorNode.Position.Z);
+			baseNode.Position = new Vector3(baseNode.Position.X, yPosition + (float)e.Progress / 100, baseNode.Position.Z);
 
 			var components = glassNode.Components.GetEnumerator();
 			if (components.MoveNext())
@@ -271,6 +285,7 @@ namespace ARStreetLamp
 			glassNode.Rotation = new Quaternion(0, e.Progress, 0);
 			lensesNode.Rotation = new Quaternion(0, e.Progress, 0);
 			mirrorNode.Rotation = new Quaternion(0, e.Progress, 0);
+			baseNode.Rotation = new Quaternion(0, e.Progress, 0);
 			lampLightNode.Rotation = new Quaternion(90.0f, e.Progress, 0);
 
 			var components = glassNode.Components.GetEnumerator();
@@ -312,27 +327,35 @@ namespace ARStreetLamp
 					poleStandNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
 					poleStandNode.SetScale(poleObjectsScale * objectsScale);
 					var model = poleStandNode.CreateComponent<StaticModel>();
-					model.CastShadows = true;
-					model.Model = ResourceCache.GetModel("standardPole/poleStand.mdl");
+					model.Model = ResourceCache.GetModel("standardPole/poleStandSmooth.mdl");
 					model.Material = ResourceCache.GetMaterial("standardPole/poleStand.xml");
+					model.CastShadows = true;
 
 
 					poleStandNutsNode = scene.CreateChild();
 					poleStandNutsNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
 					poleStandNutsNode.SetScale(poleObjectsScale * objectsScale * 12.0f);
 					model = poleStandNutsNode.CreateComponent<StaticModel>();
-					model.CastShadows = true;
 					model.Model = ResourceCache.GetModel("standardPole/poleStandNuts.mdl");
 					model.Material = ResourceCache.GetMaterial("standardPole/poleStandNuts.xml");
+					model.CastShadows = true;
 
+					var components = baseNode.Components.GetEnumerator();
+					float baseYPosition = yPosition;
+					if (components.MoveNext())
+					{
+						Vector3 centerOfBase = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+						baseYPosition = centerOfBase.Y;
+					}
 
 					poleNode = scene.CreateChild();
-					poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, poleObjectsScale * objectsScale * (float)heightSeekBar.Progress / 8.0f, poleObjectsScale * objectsScale);
+					poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, Math.Abs(baseYPosition - yPosition) / 2, poleObjectsScale * objectsScale);
 					poleNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
 					model = poleNode.CreateComponent<StaticModel>();
-					model.CastShadows = true;
+					//model.Model = ResourceCache.GetModel("standardPole/poleSmooth.mdl");
 					model.Model = ResourceCache.GetModel("standardPole/Pole.mdl");
 					model.Material = ResourceCache.GetMaterial("standardPole/Pole.xml");
+					model.CastShadows = true;
 				}
 				else
 				{
