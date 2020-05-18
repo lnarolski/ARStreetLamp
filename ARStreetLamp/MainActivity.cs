@@ -11,6 +11,9 @@ using Android;
 using Android.Content.PM;
 using Android.Util;
 using Android.Views;
+using Android.Content.Res;
+using System.IO;
+using Java.Nio.FileNio;
 
 namespace ARStreetLamp
 {
@@ -70,13 +73,36 @@ namespace ARStreetLamp
             if (launched)
                 return;
 
+            string[] lampModels = new string[0];
+            string[] poleModels = new string[0];
+
+            AssetManager assets = this.Assets;
+            using (StreamReader sr = new StreamReader(assets.Open("models.txt")))
+            {
+                try
+                {
+                    lampModels = sr.ReadLine().Split(',');
+                }
+                catch (Exception) {}
+
+                try
+                {
+                    poleModels = sr.ReadLine().Split(',');
+                }
+                catch (Exception) { }
+            }
+
+            var paths = new string[lampModels.Length + poleModels.Length];
+            lampModels.CopyTo(paths, 0);
+            poleModels.CopyTo(paths, lampModels.Length);
+
             launched = true;
             surface = UrhoSurface.CreateSurface(this);
             placeholder.AddView(surface);
             arrender = await surface.Show<ARRender>(
                 new Urho.ApplicationOptions
                 {
-                    ResourcePaths = new[] { "Cel", "standardPole" }
+                    ResourcePaths = paths
                 });
 
             arrender.poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
@@ -84,6 +110,9 @@ namespace ARStreetLamp
             arrender.heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
             arrender.rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
             arrender.mainActivity = this;
+            arrender.poleModels = poleModels;
+            arrender.lampModels = lampModels;
+            arrender.assetManager = Assets;
 
             arrender.PrepareInterface();
 

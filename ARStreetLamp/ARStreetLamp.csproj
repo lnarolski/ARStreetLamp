@@ -70,7 +70,6 @@
     <AndroidAsset Include="Assets\Cel\Glass.mdl" />
     <AndroidAsset Include="Assets\Cel\Lenses.mdl" />
     <AndroidAsset Include="Assets\Cel\Mirror.mdl" />
-    <AndroidAsset Include="Assets\Cel\Sphere.mdl" />
     <AndroidAsset Include="Assets\standardPole\poleStand.mdl" />
     <AndroidAsset Include="Assets\standardPole\poleStandNuts.mdl" />
     <AndroidAsset Include="Assets\standardPole\Pole.mdl" />
@@ -135,9 +134,6 @@
     <AndroidAsset Include="Assets\Cel\mirrorLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\Scene.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\standardPole\poleScene.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +150,15 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\standardPole\Pole.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\models.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Cel\config.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\standardPole\config.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

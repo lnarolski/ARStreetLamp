@@ -1,0 +1,4 @@
+﻿poleStandNuts,poleStand
+poleStandNuts,poleStand
+Pole,Pole
+0.085

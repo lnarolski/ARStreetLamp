@@ -1,0 +1,4 @@
+﻿Body,Lenses,Mirror
+bodyLamp,lensesLamp,waterMirrorLamp
+Glass,glassLamp
+0.4674199
