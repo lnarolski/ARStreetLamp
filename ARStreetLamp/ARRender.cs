@@ -15,6 +15,7 @@ using Com.Google.AR.Core;
 using Java.Util;
 using Android.Content.Res;
 using System.IO;
+using Java.Lang;
 
 namespace ARStreetLamp
 {
@@ -53,13 +54,19 @@ namespace ARStreetLamp
         public Activity mainActivity;
         private Toast toast;
 
-        public string[] lampModels;
-        public string[] poleModels;
+        public string[] lampModelsString;
+        public string[] poleModelsString;
         public AssetManager assetManager;
+
+        List<LampModel> lampModels;
+        List<PoleModel> poleModels;
 
         public ARCoreComponent ArCore { get; private set; }
 
-        public ARRender(ApplicationOptions options) : base(options) { }
+        public ARRender(ApplicationOptions options) : base(options) {
+            lampModels = new List<LampModel>();
+            poleModels = new List<PoleModel>();
+        }
 
         private void ShowToast(string mssg)
         {
@@ -107,62 +114,72 @@ namespace ARStreetLamp
 
             // Lamps
 
-            StaticModel model;
+            while (assetManager == null) { } //Wait for finish of initialization
 
-            bodyNode = scene.CreateChild();
-            bodyNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
-            bodyNode.SetScale(objectsScale);
-            model = bodyNode.CreateComponent<StaticModel>();
-            model.CastShadows = true;
-            model.Model = ResourceCache.GetModel("Cel/Body.mdl");
-            model.Material = ResourceCache.GetMaterial("Cel/bodyLamp.xml");
+            for (int i = 0; i < lampModelsString.Length; i++)
+            {
+                using (StreamReader sr = new StreamReader(assetManager.Open(lampModelsString[i] + @"/config.txt")))
+                {
+                    string[] lampElements = sr.ReadLine().Split(',');
+                    string[] lampMaterials = sr.ReadLine().Split(',');
+                    string[] lightElement = sr.ReadLine().Split(',');
+                    string[] baseElement = sr.ReadLine().Split(',');
 
-            baseNode = scene.CreateChild();
-            baseNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
-            baseNode.SetScale(objectsScale);
-            model = baseNode.CreateComponent<StaticModel>();
-            model.CastShadows = true;
-            model.Model = ResourceCache.GetModel("Cel/Base.mdl");
-            model.Material = ResourceCache.GetMaterial("Cel/bodyLamp.xml");
+                    LampModel lampModel = new LampModel();
+                    lampModel.lampScale = Float.ParseFloat(sr.ReadLine());
+                    lampModel.name = lampModelsString[i];
 
-            glassNode = scene.CreateChild();
-            glassNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
-            glassNode.SetScale(objectsScale);
-            model = glassNode.CreateComponent<StaticModel>();
-            model.CastShadows = true;
-            model.Model = ResourceCache.GetModel("Cel/Glass.mdl");
-            model.Material = ResourceCache.GetMaterial("Cel/glassLamp.xml");
+                    for (int j = 0; j < lampElements.Length; j++)
+                    {
+                        Node node = scene.CreateChild();
+                        node.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                        node.SetScale(lampModel.lampScale);
+                        StaticModel model = node.CreateComponent<StaticModel>();
+                        model.CastShadows = true;
+                        model.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + lampElements[i] + @".mdl");
+                        model.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + lampMaterials[i] + @".xml");
 
-            lensesNode = scene.CreateChild();
-            lensesNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
-            lensesNode.SetScale(objectsScale);
-            model = lensesNode.CreateComponent<StaticModel>();
-            model.CastShadows = true;
-            model.Model = ResourceCache.GetModel("Cel/Lenses.mdl");
-            model.Material = ResourceCache.GetMaterial("Cel/lensesLamp.xml");
+                        lampModel.lampElements.Add(node);
+                    }
+                    Node lightLampNode = scene.CreateChild();
+                    lightLampNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                    lightLampNode.SetScale(lampModel.lampScale);
+                    StaticModel lightLampModel = lightLampNode.CreateComponent<StaticModel>();
+                    lightLampModel.CastShadows = true;
+                    lightLampModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + lightElement[0] + @".mdl");
+                    lightLampModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + lightElement[1] + @".xml");
+                    lampModel.lampElements.Add(lightLampNode);
 
-            mirrorNode = scene.CreateChild();
-            mirrorNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
-            mirrorNode.SetScale(objectsScale);
-            model = mirrorNode.CreateComponent<StaticModel>();
-            model.CastShadows = true;
-            model.Model = ResourceCache.GetModel("Cel/Mirror.mdl");
-            model.Material = ResourceCache.GetMaterial("Cel/waterMirrorLamp.xml");
+                    //Lamp light
+                    Node lampLightNode = scene.CreateChild();
+                    lampLightNode.Rotation = new Quaternion(90.0f, 0.0f, 0.0f);
 
-            //Lamp light
-            lampLightNode = scene.CreateChild();
-            lampLightNode.Rotation = new Quaternion(90.0f, 0.0f, 0.0f);
+                    Light lampLightLight = lampLightNode.CreateComponent<Light>();
+                    lampLightLight.LightType = LightType.Point;
+                    lampLightLight.Length = 1;
+                    lampLightLight.Range = 0.8f;
+                    lampLightLight.Fov = 160.0f;
+                    lampLightLight.AspectRatio = 1.05f;
+                    lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
+                    lampLightLight.Brightness = 0.0f;
+                    lampLightLight.CastShadows = true;
+                    lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
 
-            lampLightLight = lampLightNode.CreateComponent<Light>();
-            lampLightLight.LightType = LightType.Point;
-            lampLightLight.Length = 1;
-            lampLightLight.Range = 0.8f;
-            lampLightLight.Fov = 160.0f;
-            lampLightLight.AspectRatio = 1.05f;
-            lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
-            lampLightLight.Brightness = 0.0f;
-            lampLightLight.CastShadows = true;
-            lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
+                    lampModel.lightElement = lampLightNode;
+                    lampModel.light = lampLightLight;
+
+                    Node baseNode = scene.CreateChild();
+                    baseNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                    baseNode.SetScale(lampModel.lampScale);
+                    StaticModel baseModel = baseNode.CreateComponent<StaticModel>();
+                    baseModel.CastShadows = true;
+                    baseModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + baseElement[0] + @".mdl");
+                    baseModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + baseElement[1] + @".xml");
+                    lampModel.baseElement = baseNode;
+
+                    lampModels.Add(lampModel);
+                }
+            }
 
             //fps = new MonoDebugHud(this);
             //fps.Show(Color.Blue, 20);
@@ -297,7 +314,7 @@ namespace ARStreetLamp
                 baseYPosition = centerOfBase.Y;
             }
 
-            ShowToast("Height: " + (((Math.Abs(baseYPosition - yPosition) / 2) * 0.95f) / 0.45f) + " m");
+            ShowToast("Height: " + (((System.Math.Abs(baseYPosition - yPosition) / 2) * 0.95f) / 0.45f) + " m");
         }
 
         private void RotateSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
@@ -370,7 +387,7 @@ namespace ARStreetLamp
                     }
 
                     poleNode = scene.CreateChild();
-                    poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, Math.Abs(baseYPosition - yPosition) / 2, poleObjectsScale * objectsScale);
+                    poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, System.Math.Abs(baseYPosition - yPosition) / 2, poleObjectsScale * objectsScale);
                     poleNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
                     model = poleNode.CreateComponent<StaticModel>();
                     //model.Model = ResourceCache.GetModel("standardPole/poleSmooth.mdl");
@@ -388,6 +405,35 @@ namespace ARStreetLamp
                     }
                 }
             });
+        }
+    }
+
+    class LampModel
+    {
+        public List<Node> lampElements;
+        public Node baseElement;
+        public Node lightElement;
+        public Light light;
+        public float lampScale;
+        public string name;
+
+
+        public LampModel()
+        {
+            lampElements = new List<Node>();
+        }
+    }
+
+    class PoleModel
+    {
+        public List<Node> poleElements;
+        public Node scalablePoleElement;
+        public float poleScale;
+        public string name;
+
+        public PoleModel()
+        {
+            poleElements = new List<Node>();
         }
     }
 }

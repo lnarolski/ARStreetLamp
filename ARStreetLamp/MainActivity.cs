@@ -14,6 +14,7 @@ using Android.Views;
 using Android.Content.Res;
 using System.IO;
 using Java.Nio.FileNio;
+using System.Collections.Generic;
 
 namespace ARStreetLamp
 {
@@ -110,8 +111,8 @@ namespace ARStreetLamp
             arrender.heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
             arrender.rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
             arrender.mainActivity = this;
-            arrender.poleModels = poleModels;
-            arrender.lampModels = lampModels;
+            arrender.poleModelsString = poleModels;
+            arrender.lampModelsString = lampModels;
             arrender.assetManager = Assets;
 
             arrender.PrepareInterface();
