@@ -34,9 +34,6 @@ namespace ARStreetLamp
         private Node mirrorNode;
         private Node baseNode;
 
-        private Node lampLightNode;
-        private Light lampLightLight;
-
         private float yPosition = 0.0f;
 
         public ToggleButton poleButton;
@@ -44,12 +41,12 @@ namespace ARStreetLamp
         public SeekBar heightSeekBar;
         public SeekBar rotateSeekBar;
 
-        private float objectsScale = 0.4674199f;
-        private float poleObjectsScale = 0.085f;
+        //private float objectsScale = 0.4674199f;
+        //private float poleObjectsScale = 0.085f;
         private Scene scene;
-        private Node poleNode;
-        private Node poleStandNode;
-        private Node poleStandNutsNode;
+        //private Node poleNode;
+        //private Node poleStandNode;
+        //private Node poleStandNutsNode;
 
         public Activity mainActivity;
         private Toast toast;
@@ -60,12 +57,16 @@ namespace ARStreetLamp
 
         List<LampModel> lampModels;
         List<PoleModel> poleModels;
+        List<LampModel> sceneLampModels;
+        List<PoleModel> scenePoleModels;
 
         public ARCoreComponent ArCore { get; private set; }
 
         public ARRender(ApplicationOptions options) : base(options) {
             lampModels = new List<LampModel>();
             poleModels = new List<PoleModel>();
+            sceneLampModels = new List<LampModel>();
+            scenePoleModels = new List<PoleModel>();
         }
 
         private void ShowToast(string mssg)
@@ -131,7 +132,7 @@ namespace ARStreetLamp
 
                     for (int j = 0; j < lampElements.Length; j++)
                     {
-                        Node node = scene.CreateChild();
+                        Node node = new Node();
                         node.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
                         node.SetScale(lampModel.lampScale);
                         StaticModel model = node.CreateComponent<StaticModel>();
@@ -141,7 +142,7 @@ namespace ARStreetLamp
 
                         lampModel.lampElements.Add(node);
                     }
-                    Node lightLampNode = scene.CreateChild();
+                    Node lightLampNode = new Node();
                     lightLampNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
                     lightLampNode.SetScale(lampModel.lampScale);
                     StaticModel lightLampModel = lightLampNode.CreateComponent<StaticModel>();
@@ -151,7 +152,7 @@ namespace ARStreetLamp
                     lampModel.lampElements.Add(lightLampNode);
 
                     //Lamp light
-                    Node lampLightNode = scene.CreateChild();
+                    Node lampLightNode = new Node();
                     lampLightNode.Rotation = new Quaternion(90.0f, 0.0f, 0.0f);
 
                     Light lampLightLight = lampLightNode.CreateComponent<Light>();
@@ -168,7 +169,7 @@ namespace ARStreetLamp
                     lampModel.lightElement = lampLightNode;
                     lampModel.light = lampLightLight;
 
-                    Node baseNode = scene.CreateChild();
+                    Node baseNode = new Node();
                     baseNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
                     baseNode.SetScale(lampModel.lampScale);
                     StaticModel baseModel = baseNode.CreateComponent<StaticModel>();
