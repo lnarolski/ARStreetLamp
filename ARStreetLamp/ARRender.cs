@@ -28,14 +28,6 @@ namespace ARStreetLamp
         private MonoDebugHud fps;
         private bool gammaCorrected;
 
-        private Node bodyNode;
-        private Node glassNode;
-        private Node lensesNode;
-        private Node mirrorNode;
-        private Node baseNode;
-
-        private float yPosition = 0.0f;
-
         public ToggleButton poleButton;
         public ToggleButton lightButton;
         public SeekBar heightSeekBar;
@@ -59,6 +51,8 @@ namespace ARStreetLamp
         List<PoleModel> poleModels;
         List<LampModel> sceneLampModels;
         List<PoleModel> scenePoleModels;
+        private int selectedLampModel = 0;
+        private int selectedPoleModel = 0;
 
         public ARCoreComponent ArCore { get; private set; }
 
@@ -133,7 +127,7 @@ namespace ARStreetLamp
                     for (int j = 0; j < lampElements.Length; j++)
                     {
                         Node node = new Node();
-                        node.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                        node.Position = new Vector3(0, lampModel.yPosition, 0.5f); // 50cm Z
                         node.SetScale(lampModel.lampScale);
                         StaticModel model = node.CreateComponent<StaticModel>();
                         model.CastShadows = true;
@@ -143,17 +137,22 @@ namespace ARStreetLamp
                         lampModel.lampElements.Add(node);
                     }
                     Node lightLampNode = new Node();
-                    lightLampNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                    lightLampNode.Position = new Vector3(0, lampModel.yPosition, 0.5f); // 50cm Z
                     lightLampNode.SetScale(lampModel.lampScale);
                     StaticModel lightLampModel = lightLampNode.CreateComponent<StaticModel>();
                     lightLampModel.CastShadows = true;
                     lightLampModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + lightElement[0] + @".mdl");
                     lightLampModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + lightElement[1] + @".xml");
-                    lampModel.lampElements.Add(lightLampNode);
+                    lampModel.glassElement = lightLampNode;
 
                     //Lamp light
                     Node lampLightNode = new Node();
                     lampLightNode.Rotation = new Quaternion(90.0f, 0.0f, 0.0f);
+                    var components = lampModel.glassElement.Components.GetEnumerator();
+                    if (components.MoveNext())
+                    {
+                        lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+                    }
 
                     Light lampLightLight = lampLightNode.CreateComponent<Light>();
                     lampLightLight.LightType = LightType.Point;
@@ -170,7 +169,7 @@ namespace ARStreetLamp
                     lampModel.light = lampLightLight;
 
                     Node baseNode = new Node();
-                    baseNode.Position = new Vector3(0, yPosition, 0.5f); // 50cm Y, 50cm Z
+                    baseNode.Position = new Vector3(0, lampModel.yPosition, 0.5f); // 50cm Z
                     baseNode.SetScale(lampModel.lampScale);
                     StaticModel baseModel = baseNode.CreateComponent<StaticModel>();
                     baseModel.CastShadows = true;
@@ -213,30 +212,23 @@ namespace ARStreetLamp
             if (hitTest != null && hitTest.Count > 0)
             {
                 var hitPos = hitTest[0].HitPose;
-                bodyNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
-                glassNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
-                lensesNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
-                mirrorNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
-                baseNode.Position = new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz());
+                sceneLampModels.Add(lampModels[selectedLampModel]);
+                sceneLampModels[sceneLampModels.Count - 1].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
 
-                var components = glassNode.Components.GetEnumerator();
-                if (components.MoveNext())
-                {
-                    lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
-                }
-
-                yPosition = hitPos.Ty();
                 heightSeekBar.Progress = 0;
 
-                if (poleNode != null)
+                if (selectedLampModel < scenePoleModels.Count && scenePoleModels[selectedLampModel] != null)
                 {
-                    if (!poleNode.IsDeleted)
+                    if (!scenePoleModels[selectedLampModel].poleElements[0].IsDeleted)
                     {
+
                         poleStandNode.Remove();
                         poleStandNutsNode.Remove();
                         poleNode.Remove();
                     }
                 }
+
+                sceneLampModels[sceneLampModels.Count - 1].AddToScene(ref scene);
             }
         }
 
@@ -412,16 +404,70 @@ namespace ARStreetLamp
     class LampModel
     {
         public List<Node> lampElements;
+        public Node glassElement;
         public Node baseElement;
         public Node lightElement;
         public Light light;
         public float lampScale;
         public string name;
 
+        public float yPosition = 0.0f;
 
         public LampModel()
         {
             lampElements = new List<Node>();
+        }
+
+        public void MoveLamp(Vector3 vector3)
+        {
+            foreach (var item in lampElements)
+            {
+                item.Position = vector3;
+            }
+            baseElement.Position = vector3;
+            glassElement.Position = vector3;
+
+            var components = glassElement.Components.GetEnumerator();
+            if (components.MoveNext())
+            {
+                lightElement.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+            }
+
+            yPosition = vector3.Y;
+        }
+
+        public void ScaleLamp(Vector3 vector3)
+        {
+            foreach (var item in lampElements)
+            {
+                item.Position = vector3;
+            }
+            baseElement.Position = vector3;
+            lightElement.Position = vector3;
+
+            yPosition = vector3.Y;
+        }
+
+        public void RotateLamp(Quaternion quaternion)
+        {
+            foreach (var item in lampElements)
+            {
+                item.Position = vector3;
+            }
+            baseElement.Position = vector3;
+            lightElement.Position = vector3;
+
+            yPosition = vector3.Y;
+        }
+
+        public void AddToScene(ref Scene scene)
+        {
+            foreach (var item in lampElements)
+            {
+                scene.AddChild(item);
+            }
+            scene.AddChild(baseElement);
+            scene.AddChild(lightElement);
         }
     }
 
