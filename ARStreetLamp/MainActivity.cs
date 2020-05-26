@@ -77,25 +77,25 @@ namespace ARStreetLamp
             string[] lampModels = new string[0];
             string[] poleModels = new string[0];
 
-            AssetManager assets = this.Assets;
-            using (StreamReader sr = new StreamReader(assets.Open("models.txt")))
-            {
-                try
-                {
-                    lampModels = sr.ReadLine().Split(',');
-                }
-                catch (Exception) {}
+            //AssetManager assets = this.Assets;
+            //using (StreamReader sr = new StreamReader(assets.Open("models.txt")))
+            //{
+            //    try
+            //    {
+            //        lampModels = sr.ReadLine().Split(',');
+            //    }
+            //    catch (Exception) {}
 
-                try
-                {
-                    poleModels = sr.ReadLine().Split(',');
-                }
-                catch (Exception) { }
-            }
+            //    try
+            //    {
+            //        poleModels = sr.ReadLine().Split(',');
+            //    }
+            //    catch (Exception) { }
+            //}
 
-            var paths = new string[lampModels.Length + poleModels.Length];
-            lampModels.CopyTo(paths, 0);
-            poleModels.CopyTo(paths, lampModels.Length);
+            //var paths = new string[lampModels.Length + poleModels.Length];
+            //lampModels.CopyTo(paths, 0);
+            //poleModels.CopyTo(paths, lampModels.Length);
 
             launched = true;
             surface = UrhoSurface.CreateSurface(this);
@@ -103,7 +103,7 @@ namespace ARStreetLamp
             arrender = await surface.Show<ARRender>(
                 new Urho.ApplicationOptions
                 {
-                    ResourcePaths = paths
+                    ResourcePaths = new string[] { "ArData" }
                 });
 
             arrender.poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
@@ -115,7 +115,7 @@ namespace ARStreetLamp
             arrender.lampModelsString = lampModels;
             arrender.assetManager = Assets;
 
-            arrender.PrepareInterface();
+            arrender.PrepareAR();
 
             SetTitle(Resource.String.app_name);
         }

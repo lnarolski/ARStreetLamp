@@ -56,12 +56,7 @@ namespace ARStreetLamp
 
         public ARCoreComponent ArCore { get; private set; }
 
-        public ARRender(ApplicationOptions options) : base(options) {
-            lampModels = new List<LampModel>();
-            poleModels = new List<PoleModel>();
-            sceneLampModels = new List<LampModel>();
-            scenePoleModels = new List<PoleModel>();
-        }
+        public ARRender(ApplicationOptions options) : base(options) {}
 
         private void ShowToast(string mssg)
         {
@@ -78,6 +73,11 @@ namespace ARStreetLamp
 
         protected override void Start()
         {
+            lampModels = new List<LampModel>();
+            poleModels = new List<PoleModel>();
+            sceneLampModels = new List<LampModel>();
+            scenePoleModels = new List<PoleModel>();
+
             // 3d scene with octree and ambient light
             scene = new Scene(Context);
             var octree = scene.CreateComponent<Octree>();
@@ -107,31 +107,34 @@ namespace ARStreetLamp
             ArCore.ConfigRequested += ArCore_ConfigRequested;
             ArCore.Run();
 
-            while (assetManager == null) { } //Wait for finish of initialization
+            Urho.IO.File modelsCache = ResourceCache.GetFile("models.txt");
+            modelsCache.
 
             // Lamps
             for (int i = 0; i < lampModelsString.Length; i++)
             {
-                using (StreamReader sr = new StreamReader(assetManager.Open(lampModelsString[i] + @"/config.txt")))
+                LampModel lampModel = new LampModel();
+
+                using (StreamReader sr = new StreamReader(assetManager.Open(@"ArData/" + lampModelsString[i] + @"/config.txt")))
                 {
                     string[] lampElements = sr.ReadLine().Split(',');
                     string[] lampMaterials = sr.ReadLine().Split(',');
                     string[] lightElement = sr.ReadLine().Split(',');
                     string[] baseElement = sr.ReadLine().Split(',');
 
-                    LampModel lampModel = new LampModel();
                     lampModel.lampScale = Float.ParseFloat(sr.ReadLine());
                     lampModel.name = lampModelsString[i];
 
                     for (int j = 0; j < lampElements.Length; j++)
                     {
                         Node node = new Node();
+                        //Node node = scene.CreateChild();
                         node.Position = new Vector3(0, lampModel.yPosition, 0.5f); // 50cm Z
                         node.SetScale(lampModel.lampScale);
                         StaticModel model = node.CreateComponent<StaticModel>();
                         model.CastShadows = true;
-                        model.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + lampElements[i] + @".mdl");
-                        model.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + lampMaterials[i] + @".xml");
+                        model.Model = ResourceCache.GetModel(lampModelsString[i] + "/" + lampElements[j] + ".mdl");
+                        model.Material = ResourceCache.GetMaterial(lampModelsString[i] + "/" + lampMaterials[j] + ".xml");
 
                         lampModel.lampElements.Add(node);
                     }
@@ -172,24 +175,25 @@ namespace ARStreetLamp
                     baseNode.SetScale(lampModel.lampScale);
                     StaticModel baseModel = baseNode.CreateComponent<StaticModel>();
                     baseModel.CastShadows = true;
-                    baseModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + baseElement[0] + @".mdl");
-                    baseModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + baseElement[1] + @".xml");
+                    baseModel.Model = ResourceCache.GetModel(lampModelsString[i] + "/" + baseElement[0] + ".mdl");
+                    baseModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + "/" + baseElement[1] + ".xml");
                     lampModel.baseElement = baseNode;
-
-                    lampModels.Add(lampModel);
                 }
+
+                lampModels.Add(lampModel);
             }
 
             //Poles
             for (int i = 0; i < poleModelsString.Length; i++)
             {
+                PoleModel poleModel = new PoleModel();
+
                 using (StreamReader sr = new StreamReader(assetManager.Open(poleModelsString[i] + @"/config.txt")))
                 {
                     string[] poleElements = sr.ReadLine().Split(',');
                     string[] poleMaterials = sr.ReadLine().Split(',');
                     string[] scalablePoleElement = sr.ReadLine().Split(',');
 
-                    PoleModel poleModel = new PoleModel();
                     poleModel.poleScale = Float.ParseFloat(sr.ReadLine());
                     poleModel.name = poleModelsString[i];
 
@@ -197,20 +201,25 @@ namespace ARStreetLamp
                     {
                         Node node = new Node();
                         node.Position = new Vector3(0, 0, 0.5f); // 50cm Z
-                        node.SetScale(poleModel.poleScale);
-                        StaticModel model = node.CreateComponent<StaticModel>();
-                        model.CastShadows = true;
-                        model.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + poleElements[i] + @".mdl");
-                        model.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + poleMaterials[i] + @".xml");
+                        node.SetScale(poleModel.poleScale * 12.0f);
+                        StaticModel poleElementModel = node.CreateComponent<StaticModel>();
+                        poleElementModel.CastShadows = true;
+                        poleElementModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + poleElements[j] + @".mdl");
+                        poleElementModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + poleMaterials[j] + @".xml");
 
                         poleModel.poleElements.Add(node);
                     }
                     Node scalableElementNode = new Node();
                     scalableElementNode.Position = new Vector3(0, 0, 0.5f); // 50cm Z
                     scalableElementNode.SetScale(poleModel.poleScale);
+                    StaticModel modelScalableElement = scalableElementNode.CreateComponent<StaticModel>();
+                    modelScalableElement.CastShadows = true;
+                    modelScalableElement.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + scalablePoleElement[0] + @".mdl");
+                    modelScalableElement.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + scalablePoleElement[1] + @".xml");
 
-                    poleModels.Add(poleModel);
                 }
+
+                poleModels.Add(poleModel);
             }
 
             //fps = new MonoDebugHud(this);
@@ -284,7 +293,7 @@ namespace ARStreetLamp
             zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
         }
 
-        public void PrepareInterface()
+        public void PrepareAR()
         {
             poleButton.Click += PoleButton_Click;
             lightButton.Click += LightButton_Click;
@@ -295,7 +304,7 @@ namespace ARStreetLamp
 
         private void HeightSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
-            sceneLampModels[selectedLampModel].ChangeHeight(e.Progress / 100.0f);
+            sceneLampModels[selectedLampModel].ChangeLampHeight(e.Progress / 100.0f);
 
             var components = sceneLampModels[selectedLampModel].baseElement.Components.GetEnumerator();
             float baseYPosition = sceneLampModels[selectedLampModel].yPosition;
@@ -331,48 +340,17 @@ namespace ARStreetLamp
             {
                 if (poleButton.Checked)
                 {
-                    poleStandNode = scene.CreateChild();
-                    poleStandNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
-                    poleStandNode.SetScale(poleObjectsScale * objectsScale);
-                    var model = poleStandNode.CreateComponent<StaticModel>();
-                    model.Model = ResourceCache.GetModel("standardPole/poleStandSmooth.mdl");
-                    model.Material = ResourceCache.GetMaterial("standardPole/poleStand.xml");
-                    model.CastShadows = true;
+                    if (sceneLampModels[selectedLampModel].pole == null)
+                        sceneLampModels[selectedLampModel].pole = poleModels[selectedPoleModel];
 
-
-                    poleStandNutsNode = scene.CreateChild();
-                    poleStandNutsNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
-                    poleStandNutsNode.SetScale(poleObjectsScale * objectsScale * 12.0f);
-                    model = poleStandNutsNode.CreateComponent<StaticModel>();
-                    model.Model = ResourceCache.GetModel("standardPole/poleStandNuts.mdl");
-                    model.Material = ResourceCache.GetMaterial("standardPole/poleStandNuts.xml");
-                    model.CastShadows = true;
-
-                    var components = baseNode.Components.GetEnumerator();
-                    float baseYPosition = yPosition;
-                    if (components.MoveNext())
-                    {
-                        Vector3 centerOfBase = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
-                        baseYPosition = centerOfBase.Y;
-                    }
-
-                    poleNode = scene.CreateChild();
-                    poleNode.Scale = new Vector3(poleObjectsScale * objectsScale, System.Math.Abs(baseYPosition - yPosition) / 2, poleObjectsScale * objectsScale);
-                    poleNode.Position = new Vector3(bodyNode.Position.X, yPosition, bodyNode.Position.Z);
-                    model = poleNode.CreateComponent<StaticModel>();
-                    //model.Model = ResourceCache.GetModel("standardPole/poleSmooth.mdl");
-                    model.Model = ResourceCache.GetModel("standardPole/Pole.mdl");
-                    model.Material = ResourceCache.GetMaterial("standardPole/Pole.xml");
-                    model.CastShadows = true;
+                    sceneLampModels[selectedLampModel].ShowPole();
                 }
                 else
                 {
-                    if (!poleNode.IsDeleted)
-                    {
-                        poleStandNode.Remove();
-                        poleStandNutsNode.Remove();
-                        poleNode.Remove();
-                    }
+                    if (sceneLampModels[selectedLampModel].pole != null)
+                        sceneLampModels[selectedLampModel].HidePole();
+
+
                 }
             });
         }
@@ -398,6 +376,32 @@ namespace ARStreetLamp
             lampElements = new List<Node>();
         }
 
+        public void ShowPole()
+        {
+            if (pole == null)
+                return;
+
+            pole.MovePole(new Vector3(baseElement.Position.X, yPosition, baseElement.Position.Z));
+            pole.ChangeHeight(baseElement, yPosition);
+            pole.Show();
+        }
+
+        public void HidePole()
+        {
+            if (pole == null)
+                return;
+
+            pole.Hide();
+        }
+
+        public void MovePole()
+        {
+            if (pole == null)
+                return;
+
+            pole.MovePole(new Vector3(baseElement.Position.X, yPosition, baseElement.Position.Z));
+        }
+
         public void MoveLamp(Vector3 vector3)
         {
             foreach (var item in lampElements)
@@ -418,7 +422,7 @@ namespace ARStreetLamp
             yPosition = vector3.Y;
         }
 
-        public void ChangeHeight(float height)
+        public void ChangeLampHeight(float height)
         {
             foreach (var item in lampElements)
             {
@@ -537,7 +541,26 @@ namespace ARStreetLamp
 
         public void ScalePole(float scale)
         {
+            poleScale += scale;
+            foreach (var item in poleElements)
+            {
+                item.SetScale(poleScale);
+            }
+            scalablePoleElement.SetScale(scale);
+        }
 
+        public void MovePole(Vector3 vector3)
+        {
+            foreach (var item in poleElements)
+            {
+                item.Position = vector3;
+            }
+            scalablePoleElement.Position = vector3;
+        }
+
+        public void ChangeHeight(Node baseNode, float yPosition)
+        {
+            scalablePoleElement.Scale = new Vector3(poleScale, System.Math.Abs(baseNode.Position.Y - yPosition) / 2, poleScale);
         }
     }
 }

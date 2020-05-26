@@ -66,16 +66,22 @@
     <Compile Include="Resources\Resource.designer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\Body.mdl" />
-    <AndroidAsset Include="Assets\Cel\Glass.mdl" />
-    <AndroidAsset Include="Assets\Cel\Lenses.mdl" />
-    <AndroidAsset Include="Assets\Cel\Mirror.mdl" />
-    <AndroidAsset Include="Assets\standardPole\poleStand.mdl" />
-    <AndroidAsset Include="Assets\standardPole\poleStandNuts.mdl" />
-    <AndroidAsset Include="Assets\standardPole\Pole.mdl" />
-    <AndroidAsset Include="Assets\Cel\Base.mdl" />
-    <AndroidAsset Include="Assets\standardPole\poleStandSmooth.mdl" />
-    <AndroidAsset Include="Assets\standardPole\poleSmooth.mdl" />
+    <AndroidAsset Include="Assets\ArData\celLamp\Body.mdl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\ArData\celLamp\Glass.mdl" />
+    <AndroidAsset Include="Assets\ArData\celLamp\Lenses.mdl" />
+    <AndroidAsset Include="Assets\ArData\celLamp\Mirror.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStand.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandNuts.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\Pole.mdl" />
+    <AndroidAsset Include="Assets\ArData\celLamp\Base.mdl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandSmooth.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleSmooth.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandSmoothNoScale.mdl" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandNoScale.mdl" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -122,43 +128,43 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\bodyLamp.xml" />
+    <AndroidAsset Include="Assets\ArData\celLamp\bodyLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\glassLamp.xml" />
+    <AndroidAsset Include="Assets\ArData\celLamp\glassLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\lensesLamp.xml" />
+    <AndroidAsset Include="Assets\ArData\celLamp\lensesLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\mirrorLamp.xml" />
+    <AndroidAsset Include="Assets\ArData\celLamp\mirrorLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\poleScene.xml" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleScene.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\waterMirrorLamp.xml" />
+    <AndroidAsset Include="Assets\ArData\celLamp\waterMirrorLamp.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\poleStand.xml" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStand.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\poleStandNuts.xml" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandNuts.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\poleStandScene.xml" />
+    <AndroidAsset Include="Assets\ArData\standardPole\poleStandScene.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\Pole.xml" />
+    <AndroidAsset Include="Assets\ArData\standardPole\Pole.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\models.txt" />
+    <AndroidAsset Include="Assets\ArData\models.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Cel\config.txt" />
+    <AndroidAsset Include="Assets\ArData\celLamp\config.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\standardPole\config.txt" />
+    <AndroidAsset Include="Assets\ArData\standardPole\config.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

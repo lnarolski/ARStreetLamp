@@ -1,6 +1,0 @@
-<material>
-    <!-- The water example will assign the reflection texture to the diffuse unit -->
-    <!-- The engine will automatically assign the refraction (viewport) texture to the environment unit during refract pass -->
-    <technique name="Techniques/Water.xml" />
-    <parameter name="WaterTint" value="0.9 0.9 0.9" />
-</material>

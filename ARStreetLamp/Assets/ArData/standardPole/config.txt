@@ -1,0 +1,4 @@
+﻿poleStandNuts,poleStandNoScale
+poleStandNuts,poleStand
+Pole,Pole
+0.0397306915
