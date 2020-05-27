@@ -271,4 +271,3 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_Conve
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GenerateJavaStubs.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_ResolveLibraryProjectImports.stamp
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.csprojAssemblyReference.cache

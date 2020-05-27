@@ -56,7 +56,7 @@ namespace ARStreetLamp
 
         public ARCoreComponent ArCore { get; private set; }
 
-        public ARRender(ApplicationOptions options) : base(options) {}
+        public ARRender(ApplicationOptions options) : base(options) { }
 
         private void ShowToast(string mssg)
         {
@@ -107,28 +107,110 @@ namespace ARStreetLamp
             ArCore.ConfigRequested += ArCore_ConfigRequested;
             ArCore.Run();
 
-            Urho.IO.File modelsCache = ResourceCache.GetFile("models.txt");
-            modelsCache.
+            //fps = new MonoDebugHud(this);
+            //fps.Show(Color.Blue, 20);
 
-            // Lamps
-            for (int i = 0; i < lampModelsString.Length; i++)
+            // Add some post-processing (also, see CorrectGamma())
+            viewport.RenderPath.Append(CoreAssets.PostProcess.FXAA2);
+
+            Input.TouchBegin += OnTouchBegin;
+            Input.TouchEnd += OnTouchEnd;
+        }
+
+        void ArCore_ConfigRequested(Config config)
+        {
+            config.SetPlaneFindingMode(Config.PlaneFindingMode.Horizontal);
+            config.SetLightEstimationMode(Config.LightEstimationMode.AmbientIntensity);
+            config.SetUpdateMode(Config.UpdateMode.LatestCameraImage); //non blocking
+        }
+
+        void OnTouchBegin(TouchBeginEventArgs e)
+        {
+            scaling = false;
+        }
+
+        void OnTouchEnd(TouchEndEventArgs e)
+        {
+            if (scaling)
+                return;
+
+            var hitTest = currentFrame.HitTest(e.X, e.Y);
+            if (hitTest != null && hitTest.Count > 0)
             {
-                LampModel lampModel = new LampModel();
+                var hitPos = hitTest[0].HitPose;
+                sceneLampModels.Add(lampModels[selectedLampModel]);
+                sceneLampModels[sceneLampModels.Count - 1].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
 
-                using (StreamReader sr = new StreamReader(assetManager.Open(@"ArData/" + lampModelsString[i] + @"/config.txt")))
+                heightSeekBar.Progress = 0;
+
+                sceneLampModels[sceneLampModels.Count - 1].AddToScene(ref scene);
+            }
+        }
+
+        // game update
+        protected override void OnUpdate(float timeStep)
+        {
+            // multitouch scaling:
+            if (Input.NumTouches == 2)
+            {
+                scaling = true;
+                var state1 = Input.GetTouch(0);
+                var state2 = Input.GetTouch(1);
+                var distance1 = IntVector2.Distance(state1.Position, state2.Position);
+                var distance2 = IntVector2.Distance(state1.LastPosition, state2.LastPosition);
+                sceneLampModels[selectedLampModel].ScaleLamp((distance1 - distance2) / 10000f);
+
+                ShowToast("Scale: " + sceneLampModels[selectedLampModel].lampScale);
+            }
+        }
+
+        // called by the update loop
+        void OnARFrameUpdated(Frame arFrame)
+        {
+            currentFrame = arFrame;
+            var anchors = arFrame.UpdatedAnchors;
+            //TODO: visulize anchors (don't forget ARCore uses RHD coordinate system)
+
+            // Adjust our ambient light based on the light estimates ARCore provides each frame
+            var lightEstimate = arFrame.LightEstimate;
+            //fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
+            zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
+        }
+
+        public void PrepareAR()
+        {
+            poleButton.Click += PoleButton_Click;
+            lightButton.Click += LightButton_Click;
+
+            rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
+            heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
+
+            Urho.Application.InvokeOnMain(() =>
+            {
+                // Lamps
+                for (int i = 0; i < lampModelsString.Length; i++)
                 {
-                    string[] lampElements = sr.ReadLine().Split(',');
-                    string[] lampMaterials = sr.ReadLine().Split(',');
-                    string[] lightElement = sr.ReadLine().Split(',');
-                    string[] baseElement = sr.ReadLine().Split(',');
+                    LampModel lampModel = new LampModel();
 
-                    lampModel.lampScale = Float.ParseFloat(sr.ReadLine());
-                    lampModel.name = lampModelsString[i];
+                    string[] lampElements;
+                    string[] lampMaterials;
+                    string[] lightElement;
+                    string[] baseElement;
+
+                    using (StreamReader sr = new StreamReader(assetManager.Open(@"ArData/" + lampModelsString[i] + @"/config.txt")))
+                    {
+                        lampElements = sr.ReadLine().Split(',');
+                        lampMaterials = sr.ReadLine().Split(',');
+                        lightElement = sr.ReadLine().Split(',');
+                        baseElement = sr.ReadLine().Split(',');
+
+                        lampModel.lampScale = Float.ParseFloat(sr.ReadLine());
+                        lampModel.name = lampModelsString[i];
+                    }
 
                     for (int j = 0; j < lampElements.Length; j++)
                     {
                         Node node = new Node();
-                        //Node node = scene.CreateChild();
                         node.Position = new Vector3(0, lampModel.yPosition, 0.5f); // 50cm Z
                         node.SetScale(lampModel.lampScale);
                         StaticModel model = node.CreateComponent<StaticModel>();
@@ -178,24 +260,28 @@ namespace ARStreetLamp
                     baseModel.Model = ResourceCache.GetModel(lampModelsString[i] + "/" + baseElement[0] + ".mdl");
                     baseModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + "/" + baseElement[1] + ".xml");
                     lampModel.baseElement = baseNode;
+
+                    lampModels.Add(lampModel);
                 }
 
-                lampModels.Add(lampModel);
-            }
-
-            //Poles
-            for (int i = 0; i < poleModelsString.Length; i++)
-            {
-                PoleModel poleModel = new PoleModel();
-
-                using (StreamReader sr = new StreamReader(assetManager.Open(poleModelsString[i] + @"/config.txt")))
+                //Poles
+                for (int i = 0; i < poleModelsString.Length; i++)
                 {
-                    string[] poleElements = sr.ReadLine().Split(',');
-                    string[] poleMaterials = sr.ReadLine().Split(',');
-                    string[] scalablePoleElement = sr.ReadLine().Split(',');
+                    PoleModel poleModel = new PoleModel();
 
-                    poleModel.poleScale = Float.ParseFloat(sr.ReadLine());
-                    poleModel.name = poleModelsString[i];
+                    string[] poleElements;
+                    string[] poleMaterials;
+                    string[] scalablePoleElement;
+
+                    using (StreamReader sr = new StreamReader(assetManager.Open(@"ArData/" + poleModelsString[i] + @"/config.txt")))
+                    {
+                        poleElements = sr.ReadLine().Split(',');
+                        poleMaterials = sr.ReadLine().Split(',');
+                        scalablePoleElement = sr.ReadLine().Split(',');
+
+                        poleModel.poleScale = Float.ParseFloat(sr.ReadLine());
+                        poleModel.name = poleModelsString[i];
+                    }
 
                     for (int j = 0; j < poleElements.Length; j++)
                     {
@@ -204,8 +290,8 @@ namespace ARStreetLamp
                         node.SetScale(poleModel.poleScale * 12.0f);
                         StaticModel poleElementModel = node.CreateComponent<StaticModel>();
                         poleElementModel.CastShadows = true;
-                        poleElementModel.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + poleElements[j] + @".mdl");
-                        poleElementModel.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + poleMaterials[j] + @".xml");
+                        poleElementModel.Model = ResourceCache.GetModel(poleModelsString[i] + @"/" + poleElements[j] + @".mdl");
+                        poleElementModel.Material = ResourceCache.GetMaterial(poleModelsString[i] + @"/" + poleMaterials[j] + @".xml");
 
                         poleModel.poleElements.Add(node);
                     }
@@ -214,96 +300,20 @@ namespace ARStreetLamp
                     scalableElementNode.SetScale(poleModel.poleScale);
                     StaticModel modelScalableElement = scalableElementNode.CreateComponent<StaticModel>();
                     modelScalableElement.CastShadows = true;
-                    modelScalableElement.Model = ResourceCache.GetModel(lampModelsString[i] + @"/" + scalablePoleElement[0] + @".mdl");
-                    modelScalableElement.Material = ResourceCache.GetMaterial(lampModelsString[i] + @"/" + scalablePoleElement[1] + @".xml");
+                    modelScalableElement.Model = ResourceCache.GetModel(poleModelsString[i] + @"/" + scalablePoleElement[0] + @".mdl");
+                    modelScalableElement.Material = ResourceCache.GetMaterial(poleModelsString[i] + @"/" + scalablePoleElement[1] + @".xml");
+                    poleModel.scalablePoleElement = scalableElementNode;
 
+                    poleModels.Add(poleModel);
                 }
-
-                poleModels.Add(poleModel);
-            }
-
-            //fps = new MonoDebugHud(this);
-            //fps.Show(Color.Blue, 20);
-
-            // Add some post-processing (also, see CorrectGamma())
-            viewport.RenderPath.Append(CoreAssets.PostProcess.FXAA2);
-
-            Input.TouchBegin += OnTouchBegin;
-            Input.TouchEnd += OnTouchEnd;
-        }
-
-        void ArCore_ConfigRequested(Config config)
-        {
-            config.SetPlaneFindingMode(Config.PlaneFindingMode.Horizontal);
-            config.SetLightEstimationMode(Config.LightEstimationMode.AmbientIntensity);
-            config.SetUpdateMode(Config.UpdateMode.LatestCameraImage); //non blocking
-        }
-
-        void OnTouchBegin(TouchBeginEventArgs e)
-        {
-            scaling = false;
-        }
-
-        void OnTouchEnd(TouchEndEventArgs e)
-        {
-            if (scaling)
-                return;
-
-            var hitTest = currentFrame.HitTest(e.X, e.Y);
-            if (hitTest != null && hitTest.Count > 0)
-            {
-                var hitPos = hitTest[0].HitPose;
-                lampModels[selectedLampModel].pole = poleModels[selectedPoleModel];
-                sceneLampModels.Add(lampModels[selectedLampModel]);
-                sceneLampModels[sceneLampModels.Count - 1].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
-
-                heightSeekBar.Progress = 0;
-
-                sceneLampModels[sceneLampModels.Count - 1].AddToScene(ref scene);
-            }
-        }
-
-        // game update
-        protected override void OnUpdate(float timeStep)
-        {
-            // multitouch scaling:
-            if (Input.NumTouches == 2)
-            {
-                scaling = true;
-                var state1 = Input.GetTouch(0);
-                var state2 = Input.GetTouch(1);
-                var distance1 = IntVector2.Distance(state1.Position, state2.Position);
-                var distance2 = IntVector2.Distance(state1.LastPosition, state2.LastPosition);
-                sceneLampModels[selectedLampModel].ScaleLamp((distance1 - distance2) / 10000f);
-
-                ShowToast("Scale: " + sceneLampModels[selectedLampModel].lampScale);
-            }
-        }
-
-        // called by the update loop
-        void OnARFrameUpdated(Frame arFrame)
-        {
-            currentFrame = arFrame;
-            var anchors = arFrame.UpdatedAnchors;
-            //TODO: visulize anchors (don't forget ARCore uses RHD coordinate system)
-
-            // Adjust our ambient light based on the light estimates ARCore provides each frame
-            var lightEstimate = arFrame.LightEstimate;
-            //fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
-            zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
-        }
-
-        public void PrepareAR()
-        {
-            poleButton.Click += PoleButton_Click;
-            lightButton.Click += LightButton_Click;
-
-            rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
-            heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
+            });
         }
 
         private void HeightSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
+            if (selectedLampModel > sceneLampModels.Count - 1)
+                return;
+
             sceneLampModels[selectedLampModel].ChangeLampHeight(e.Progress / 100.0f);
 
             var components = sceneLampModels[selectedLampModel].baseElement.Components.GetEnumerator();
@@ -319,6 +329,9 @@ namespace ARStreetLamp
 
         private void RotateSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
+            if (selectedLampModel > sceneLampModels.Count - 1)
+                return;
+
             sceneLampModels[selectedLampModel].RotateLamp(new Quaternion(0, e.Progress, 0));
         }
 
@@ -341,7 +354,10 @@ namespace ARStreetLamp
                 if (poleButton.Checked)
                 {
                     if (sceneLampModels[selectedLampModel].pole == null)
+                    {
                         sceneLampModels[selectedLampModel].pole = poleModels[selectedPoleModel];
+                        sceneLampModels[selectedLampModel].pole.AddToScene(ref scene);
+                    }
 
                     sceneLampModels[selectedLampModel].ShowPole();
                 }
@@ -349,8 +365,6 @@ namespace ARStreetLamp
                 {
                     if (sceneLampModels[selectedLampModel].pole != null)
                         sceneLampModels[selectedLampModel].HidePole();
-
-
                 }
             });
         }
@@ -467,6 +481,7 @@ namespace ARStreetLamp
                 item.Rotation = quaternion;
             }
             baseElement.Rotation = quaternion;
+            glassElement.Rotation = quaternion;
             lightElement.Rotation = new Quaternion(90.0f, quaternion.Y, quaternion.Z);
 
             var components = glassElement.Components.GetEnumerator();
@@ -495,6 +510,7 @@ namespace ARStreetLamp
                 scene.AddChild(item);
             }
             scene.AddChild(baseElement);
+            scene.AddChild(glassElement);
             scene.AddChild(lightElement);
         }
     }
@@ -561,6 +577,15 @@ namespace ARStreetLamp
         public void ChangeHeight(Node baseNode, float yPosition)
         {
             scalablePoleElement.Scale = new Vector3(poleScale, System.Math.Abs(baseNode.Position.Y - yPosition) / 2, poleScale);
+        }
+
+        public void AddToScene(ref Scene scene)
+        {
+            foreach (var item in poleElements)
+            {
+                scene.AddChild(item);
+            }
+            scene.AddChild(scalablePoleElement);
         }
     }
 }

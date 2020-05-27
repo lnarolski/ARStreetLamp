@@ -77,25 +77,25 @@ namespace ARStreetLamp
             string[] lampModels = new string[0];
             string[] poleModels = new string[0];
 
-            //AssetManager assets = this.Assets;
-            //using (StreamReader sr = new StreamReader(assets.Open("models.txt")))
-            //{
-            //    try
-            //    {
-            //        lampModels = sr.ReadLine().Split(',');
-            //    }
-            //    catch (Exception) {}
+            AssetManager assets = this.Assets;
+            using (StreamReader sr = new StreamReader(assets.Open("ArData/models.txt")))
+            {
+                try
+                {
+                    lampModels = sr.ReadLine().Split(',');
+                }
+                catch (Exception) { }
 
-            //    try
-            //    {
-            //        poleModels = sr.ReadLine().Split(',');
-            //    }
-            //    catch (Exception) { }
-            //}
+                try
+                {
+                    poleModels = sr.ReadLine().Split(',');
+                }
+                catch (Exception) { }
+            }
 
-            //var paths = new string[lampModels.Length + poleModels.Length];
-            //lampModels.CopyTo(paths, 0);
-            //poleModels.CopyTo(paths, lampModels.Length);
+            var paths = new string[lampModels.Length + poleModels.Length];
+            lampModels.CopyTo(paths, 0);
+            poleModels.CopyTo(paths, lampModels.Length);
 
             launched = true;
             surface = UrhoSurface.CreateSurface(this);
