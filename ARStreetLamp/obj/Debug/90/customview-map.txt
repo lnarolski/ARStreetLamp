@@ -4,6 +4,7 @@ android.widget.LinearLayout;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLa
 background;obj\Debug\90\res\mipmap-anydpi-v26\ic_launcher.xml
 background;obj\Debug\90\res\mipmap-anydpi-v26\ic_launcher_round.xml
 Button;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\layout\__arcore_education.xml
+Button;obj\Debug\90\res\layout\activity_main.xml
 cache-path;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\39\jl\res\xml\xamarin_essentials_fileprovider_file_paths.xml
 color;obj\Debug\90\res\values\colors.xml
 color;obj\Debug\90\res\values\ic_launcher_background.xml

@@ -27,6 +27,10 @@ namespace ARStreetLamp
         UrhoSurfacePlaceholder surface;
         ToggleButton hudButton;
 
+        private int hudScreenNum = 0;
+        private int lastHudScreenNum = 0;
+        private Toast toast;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -44,6 +48,11 @@ namespace ARStreetLamp
                     ChangeVisibilityOfHUD(false);
             };
 
+            Button prevControlsScreenButton = FindViewById<Button>(Resource.Id.prevControlsScreenButton);
+            Button nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
+            prevControlsScreenButton.Click += PrevControlsScreenButton_Click;
+            nextControlsScreenButton.Click += NextControlsScreenButton_Click;
+
             LaunchUrho();
 
             SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
@@ -59,7 +68,7 @@ namespace ARStreetLamp
             rotateSeekBar.LayoutParameters.Height = (int)(height * 0.3);
             rotateSeekBarFL.SetPadding((int)(width * 0.05), (int)(height * 0.7), 0, 0);
 
-            heightSeekBar.LayoutParameters.Width = (int)(width * 1.1);
+            heightSeekBar.LayoutParameters.Width = (int)(width * 1.0);
             heightSeekBar.LayoutParameters.Height = (int)(height * 0.2);
         }
 
@@ -127,6 +136,71 @@ namespace ARStreetLamp
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+        public void NextControlsScreenButton_Click(object sender, EventArgs e)
+        {
+            if (hudScreenNum == lastHudScreenNum)
+                hudScreenNum = 0;
+            else
+                ++hudScreenNum;
+
+            SetHud(hudScreenNum);
+        }
+
+        public void PrevControlsScreenButton_Click(object sender, EventArgs e)
+        {
+            if (hudScreenNum == 0)
+                hudScreenNum = lastHudScreenNum;
+            else
+                --hudScreenNum;
+
+            SetHud(hudScreenNum);
+        }
+
+        private void SetHud(int hudScreenNum)
+        {
+            ToggleButton poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
+            ToggleButton lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
+            SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
+            SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+            Button prevControlsScreenButton = FindViewById<Button>(Resource.Id.prevControlsScreenButton);
+            Button nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
+
+            poleButton.Visibility = ViewStates.Invisible;
+            lightButton.Visibility = ViewStates.Invisible;
+            heightSeekBar.Visibility = ViewStates.Invisible;
+            rotateSeekBar.Visibility = ViewStates.Invisible;
+            prevControlsScreenButton.Visibility = ViewStates.Invisible;
+            nextControlsScreenButton.Visibility = ViewStates.Invisible;
+
+            switch (hudScreenNum)
+            {
+                case 0:
+                    poleButton.Visibility = ViewStates.Visible;
+                    lightButton.Visibility = ViewStates.Visible;
+                    heightSeekBar.Visibility = ViewStates.Visible;
+                    rotateSeekBar.Visibility = ViewStates.Visible;
+                    prevControlsScreenButton.Visibility = ViewStates.Visible;
+                    nextControlsScreenButton.Visibility = ViewStates.Visible;
+                    ShowToast("Main HUD");
+                    break;
+                case 1:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ShowToast(string mssg)
+        {
+            if (toast != null)
+            {
+                toast.Cancel();
+            }
+            toast = Toast.MakeText(Android.App.Application.Context, mssg, ToastLength.Short);
+            toast.Show();
+        }
+
         protected override void OnResume()
         {
             base.OnResume();
@@ -165,13 +239,12 @@ namespace ARStreetLamp
             ToggleButton lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
             SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
             SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
+            Button prevControlsScreenButton = FindViewById<Button>(Resource.Id.prevControlsScreenButton);
+            Button nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
 
             if (state)
             {
-                poleButton.Visibility = Android.Views.ViewStates.Visible;
-                lightButton.Visibility = Android.Views.ViewStates.Visible;
-                heightSeekBar.Visibility = Android.Views.ViewStates.Visible;
-                rotateSeekBar.Visibility = Android.Views.ViewStates.Visible;
+                SetHud(hudScreenNum);
             }
             else
             {
@@ -179,6 +252,8 @@ namespace ARStreetLamp
                 lightButton.Visibility = Android.Views.ViewStates.Invisible;
                 heightSeekBar.Visibility = Android.Views.ViewStates.Invisible;
                 rotateSeekBar.Visibility = Android.Views.ViewStates.Invisible;
+                prevControlsScreenButton.Visibility = Android.Views.ViewStates.Invisible;
+                nextControlsScreenButton.Visibility = Android.Views.ViewStates.Invisible;
             }
         }
     }

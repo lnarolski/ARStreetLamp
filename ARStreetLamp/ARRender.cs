@@ -134,6 +134,9 @@ namespace ARStreetLamp
             if (scaling)
                 return;
 
+            if (currentFrame == null)
+                return;
+
             var hitTest = currentFrame.HitTest(e.X, e.Y);
             if (hitTest != null && hitTest.Count > 0)
             {
@@ -337,6 +340,12 @@ namespace ARStreetLamp
 
         private void LightButton_Click(object sender, EventArgs e)
         {
+            if (selectedLampModel >= sceneLampModels.Count || sceneLampModels[selectedLampModel] == null)
+            {
+                ((ToggleButton)sender).Checked = false;
+                return;
+            }
+
             if (lightButton.Checked)
             {
                 sceneLampModels[selectedLampModel].TurnOn();
@@ -349,6 +358,12 @@ namespace ARStreetLamp
 
         private void PoleButton_Click(object sender, EventArgs e)
         {
+            if (selectedLampModel >= sceneLampModels.Count || sceneLampModels[selectedLampModel] == null)
+            {
+                ((ToggleButton)sender).Checked = false;
+                return;
+            }
+
             Urho.Application.InvokeOnMain(() =>
             {
                 if (poleButton.Checked)
