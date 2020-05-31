@@ -16,6 +16,7 @@ using Java.Util;
 using Android.Content.Res;
 using System.IO;
 using Java.Lang;
+using System.Dynamic;
 
 namespace ARStreetLamp
 {
@@ -36,9 +37,6 @@ namespace ARStreetLamp
         //private float objectsScale = 0.4674199f;
         //private float poleObjectsScale = 0.085f;
         private Scene scene;
-        //private Node poleNode;
-        //private Node poleStandNode;
-        //private Node poleStandNutsNode;
 
         public Activity mainActivity;
         private Toast toast;
@@ -50,9 +48,19 @@ namespace ARStreetLamp
         List<LampModel> lampModels;
         List<PoleModel> poleModels;
         List<LampModel> sceneLampModels;
-        List<PoleModel> scenePoleModels;
         private int selectedLampModel = 0;
         private int selectedPoleModel = 0;
+
+        private int selectedLamp = -1;
+
+        internal Button prevControlsScreenButton;
+        internal Button nextControlsScreenButton;
+        internal Button editLampsButton;
+        internal Button createInstalationButton;
+        internal Button deleteAllLampsButton;
+        internal Button editLampButton;
+        internal Button prevSelLampButton;
+        internal Button nextSelLampButton;
 
         public ARCoreComponent ArCore { get; private set; }
 
@@ -76,7 +84,6 @@ namespace ARStreetLamp
             lampModels = new List<LampModel>();
             poleModels = new List<PoleModel>();
             sceneLampModels = new List<LampModel>();
-            scenePoleModels = new List<PoleModel>();
 
             // 3d scene with octree and ambient light
             scene = new Scene(Context);
@@ -141,12 +148,14 @@ namespace ARStreetLamp
             if (hitTest != null && hitTest.Count > 0)
             {
                 var hitPos = hitTest[0].HitPose;
-                sceneLampModels.Add(lampModels[selectedLampModel]);
-                sceneLampModels[sceneLampModels.Count - 1].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
+                sceneLampModels.Add(new LampModel(lampModels[selectedLampModel], sceneLampModels.Count.ToString()));
+                selectedLamp = sceneLampModels.Count - 1;
+
+                sceneLampModels[selectedLamp].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
 
                 heightSeekBar.Progress = 0;
 
-                sceneLampModels[sceneLampModels.Count - 1].AddToScene(ref scene);
+                sceneLampModels[selectedLamp].AddToScene(ref scene);
             }
         }
 
@@ -184,6 +193,7 @@ namespace ARStreetLamp
         {
             poleButton.Click += PoleButton_Click;
             lightButton.Click += LightButton_Click;
+            deleteAllLampsButton.Click += DeleteAllLampsButton_Click;
 
             rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
             heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
@@ -314,74 +324,98 @@ namespace ARStreetLamp
 
         private void HeightSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
-            if (selectedLampModel > sceneLampModels.Count - 1)
+            if (sceneLampModels.Count == 0)
                 return;
 
-            sceneLampModels[selectedLampModel].ChangeLampHeight(e.Progress / 100.0f);
+            foreach (var item in sceneLampModels)
+            {
+                item.ChangeLampHeight(e.Progress / 100.0f);
+            }
 
-            var components = sceneLampModels[selectedLampModel].baseElement.Components.GetEnumerator();
-            float baseYPosition = sceneLampModels[selectedLampModel].yPosition;
+            var components = sceneLampModels[0].baseElement.Components.GetEnumerator();
+            float baseYPosition = sceneLampModels[0].yPosition;
             if (components.MoveNext())
             {
                 Vector3 centerOfBase = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
                 baseYPosition = centerOfBase.Y;
             }
 
-            ShowToast("Height: " + (((System.Math.Abs(baseYPosition - sceneLampModels[selectedLampModel].yPosition) / 2) * 0.95f) / 0.45f) + " m");
+            ShowToast("Height: " + (((System.Math.Abs(baseYPosition - sceneLampModels[0].yPosition) / 2) * 0.95f) / 0.45f) + " m");
         }
 
         private void RotateSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
-            if (selectedLampModel > sceneLampModels.Count - 1)
+            if (sceneLampModels.Count == 0)
                 return;
 
-            sceneLampModels[selectedLampModel].RotateLamp(new Quaternion(0, e.Progress, 0));
+            foreach (var item in sceneLampModels)
+            {
+                item.RotateLamp(new Quaternion(0, e.Progress, 0));
+            }
         }
 
         private void LightButton_Click(object sender, EventArgs e)
         {
-            if (selectedLampModel >= sceneLampModels.Count || sceneLampModels[selectedLampModel] == null)
+            if (sceneLampModels.Count == 0)
             {
                 ((ToggleButton)sender).Checked = false;
                 return;
             }
 
-            if (lightButton.Checked)
+            foreach (var item in sceneLampModels)
             {
-                sceneLampModels[selectedLampModel].TurnOn();
-            }
-            else
-            {
-                sceneLampModels[selectedLampModel].TurnOff();
+                if (lightButton.Checked)
+                {
+                    item.TurnOn();
+                }
+                else
+                {
+                    item.TurnOff();
+                }
             }
         }
 
         private void PoleButton_Click(object sender, EventArgs e)
         {
-            if (selectedLampModel >= sceneLampModels.Count || sceneLampModels[selectedLampModel] == null)
+            if (sceneLampModels.Count == 0)
             {
                 ((ToggleButton)sender).Checked = false;
                 return;
             }
 
-            Urho.Application.InvokeOnMain(() =>
+            foreach (var item in sceneLampModels)
             {
-                if (poleButton.Checked)
+                Urho.Application.InvokeOnMain(() =>
                 {
-                    if (sceneLampModels[selectedLampModel].pole == null)
+                    if (poleButton.Checked)
                     {
-                        sceneLampModels[selectedLampModel].pole = poleModels[selectedPoleModel];
-                        sceneLampModels[selectedLampModel].pole.AddToScene(ref scene);
-                    }
+                        if (item.pole == null)
+                        {
+                            item.pole = new PoleModel(poleModels[selectedPoleModel], item.name);
+                            item.pole.AddToScene(ref scene);
+                        }
 
-                    sceneLampModels[selectedLampModel].ShowPole();
-                }
-                else
-                {
-                    if (sceneLampModels[selectedLampModel].pole != null)
-                        sceneLampModels[selectedLampModel].HidePole();
-                }
-            });
+                        item.ShowPole();
+                    }
+                    else
+                    {
+                        if (item.pole != null)
+                            item.HidePole();
+                    }
+                });
+            }
+        }
+
+        public void DeleteAllLampsButton_Click(object sender, EventArgs e)
+        {
+            foreach (var item in sceneLampModels)
+            {
+                item.Remove();
+            }
+
+            sceneLampModels.Clear();
+
+            selectedLamp = -1;
         }
     }
 
@@ -403,6 +437,39 @@ namespace ARStreetLamp
         public LampModel()
         {
             lampElements = new List<Node>();
+        }
+
+        public LampModel(LampModel lampModel, string lampNum)
+        {
+            lampElements = new List<Node>();
+            lampElements.AddRange(lampModel.lampElements);
+
+            this.glassElement = new Node(lampModel.glassElement.Handle);
+            this.baseElement = new Node(lampModel.baseElement.Handle);
+            this.lightElement = new Node(lampModel.lightElement.Handle);
+            this.light = lampModel.light;
+            this.lampScale = lampModel.lampScale;
+            this.lightHeight = lampModel.lightHeight;
+            this.name = lampModel.name + " " + lampNum;
+        }
+
+        public void Remove()
+        {
+            foreach (var item in lampElements)
+            {
+                item.Remove();
+                item.Dispose();
+            }
+            baseElement.Remove();
+            glassElement.Remove();
+
+            baseElement.Dispose();
+            glassElement.Dispose();
+
+            if (pole != null)
+            {
+                pole.Remove();
+            }
         }
 
         public void ShowPole()
@@ -543,6 +610,16 @@ namespace ARStreetLamp
             poleElements = new List<Node>();
         }
 
+        public PoleModel(PoleModel poleModel, string poleNum)
+        {
+            poleElements = new List<Node>();
+            poleElements.AddRange(poleModel.poleElements);
+
+            scalablePoleElement = poleModel.scalablePoleElement;
+            poleScale = poleModel.poleScale;
+            name = poleModel.name + " " + poleNum;
+        }
+
         public void Show()
         {
             foreach (var item in poleElements)
@@ -566,8 +643,10 @@ namespace ARStreetLamp
             foreach (var item in poleElements)
             {
                 item.Remove();
+                item.Dispose();
             }
             scalablePoleElement.Remove();
+            scalablePoleElement.Dispose();
         }
 
         public void ScalePole(float scale)

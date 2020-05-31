@@ -1,5 +1,6 @@
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,47 +29,57 @@
             android:textOn="TURN OFF\nHUD"
             android:textOff="TURN ON\nHUD"
             android:checked="false"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
             android:id="@+id/hudButton"/>
+
         <Button
             android:layout_row="0"
             android:layout_column="1"
-            android:layout_columnWeight="2"
             android:text="&lt;&lt;"
             android:visibility="visible"
             android:layout_columnSpan="2"
-            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
             android:id="@+id/prevControlsScreenButton"
+            android:layout_gravity="center_vertical" 
             />
         <Button
             android:layout_row="0"
             android:layout_column="3"
-            android:layout_columnWeight="2"
             android:text=">>"
             android:visibility="visible"
             android:layout_columnSpan="2"
-            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
             android:id="@+id/nextControlsScreenButton"
+            android:layout_gravity="center_vertical" 
             />
+
+
+        /////////HUD 0/////////
         <ToggleButton
             android:layout_row="1"
             android:layout_column="1"
             android:textOn="TURN OFF\nPOLE"
             android:textOff="TURN ON\nPOLE"
-            android:layout_columnWeight="2"
             android:gravity="center"
             android:visibility="visible"
-            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
             android:id="@+id/poleButton"/>
         <ToggleButton
             android:layout_row="1"
             android:layout_column="3"
-            android:layout_columnWeight="2"
             android:textOn="TURN OFF\nLAMP"
             android:textOff="TURN ON\nLAMP"
             android:gravity="center"
             android:visibility="visible"
             android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
             android:id="@+id/lightButton"/>
+
         <FrameLayout
             android:layout_row="2"
             android:layout_column="4"
@@ -80,19 +91,86 @@
             <SeekBar
                 android:id="@+id/heightSeekBar"
                 android:layout_width="375dp"
-                android:layout_height="85dp" 
+                android:layout_height="85dp"
                 android:layout_gravity="center"
                 android:max="1000"
                 android:visibility="visible"
                 android:rotation="270"/>
         </FrameLayout>
+
+
+        /////////HUD 1/////////
+        <Button
+            android:layout_row="1"
+            android:layout_column="0"
+            android:text="Edit\nlamps"
+            android:visibility="visible"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:id="@+id/editLampsButton"
+            />
+        <Button
+            android:layout_row="1"
+            android:layout_column="1"
+            android:text="Create\ninstalation"
+            android:visibility="visible"
+            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
+            android:id="@+id/createInstalationButton"
+            />
+        <Button
+            android:layout_row="1"
+            android:layout_column="3"
+            android:text="Delete all\nlamps"
+            android:visibility="visible"
+            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
+            android:id="@+id/deleteAllLampsButton"
+            />
+
+
+        /////////HUD 2/////////
+        <Button
+            android:layout_row="1"
+            android:layout_column="0"
+            android:text="Edit selected\nlamp"
+            android:textSize="9sp"
+            android:visibility="visible"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:id="@+id/editLampButton"
+            android:layout_gravity="center_vertical" 
+            />
+        <Button
+            android:layout_row="1"
+            android:layout_column="1"
+            android:text="Previous\nlamp"
+            android:visibility="visible"
+            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
+            android:id="@+id/prevSelLampButton"
+            />
+        <Button
+            android:layout_row="1"
+            android:layout_column="3"
+            android:text="Next\nlamp"
+            android:visibility="visible"
+            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="2"
+            android:id="@+id/nextSelLampButton"
+            />
     </GridLayout>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+
+    /////////HUD 0/////////
+    <FrameLayout
         android:id="@+id/rotateSeekBarFL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
         <SeekBar
             android:id="@+id/rotateSeekBar"
             android:max="359"
