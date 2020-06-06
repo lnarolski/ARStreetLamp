@@ -18,6 +18,8 @@ using System.IO;
 using Java.Lang;
 using System.Dynamic;
 using Urho.Resources;
+using Android.Graphics;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace ARStreetLamp
 {
@@ -61,6 +63,7 @@ namespace ARStreetLamp
         internal Button editLampButton;
         internal Button prevSelLampButton;
         internal Button nextSelLampButton;
+        internal Button addLampButton;
 
         public ARCoreComponent ArCore { get; private set; }
 
@@ -89,7 +92,7 @@ namespace ARStreetLamp
             scene = new Scene(Context);
             var octree = scene.CreateComponent<Octree>();
             zone = scene.CreateComponent<Zone>();
-            zone.AmbientColor = new Color(1, 1, 1) * 0.2f;
+            zone.AmbientColor = new Urho.Color(1, 1, 1) * 0.2f;
 
             // Camera
             var cameraNode = scene.CreateChild(name: "Camera");
@@ -138,24 +141,20 @@ namespace ARStreetLamp
 
         void OnTouchEnd(TouchEndEventArgs e)
         {
-            if (scaling)
+            if (sceneLampModels.Count == 0)
+            {
+                ShowToast("No lamps in scene!");
                 return;
+            }
 
-            if (currentFrame == null)
+            if (scaling || currentFrame == null || selectedLamp < 0)
                 return;
 
             var hitTest = currentFrame.HitTest(e.X, e.Y);
             if (hitTest != null && hitTest.Count > 0)
             {
                 var hitPos = hitTest[0].HitPose;
-                sceneLampModels.Add(new LampModel(lampModels[selectedLampModel], ResourceCache, sceneLampModels.Count.ToString()));
-                selectedLamp = sceneLampModels.Count - 1;
-
                 sceneLampModels[selectedLamp].MoveLamp(new Vector3(hitPos.Tx(), hitPos.Ty(), -hitPos.Tz()));
-
-                heightSeekBar.Progress = 0;
-
-                sceneLampModels[selectedLamp].AddToScene(ref scene);
             }
         }
 
@@ -177,7 +176,7 @@ namespace ARStreetLamp
         }
 
         // called by the update loop
-        void OnARFrameUpdated(Frame arFrame)
+        void OnARFrameUpdated(Com.Google.AR.Core.Frame arFrame)
         {
             currentFrame = arFrame;
             var anchors = arFrame.UpdatedAnchors;
@@ -186,7 +185,7 @@ namespace ARStreetLamp
             // Adjust our ambient light based on the light estimates ARCore provides each frame
             var lightEstimate = arFrame.LightEstimate;
             //fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
-            zone.AmbientColor = new Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
+            zone.AmbientColor = new Urho.Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
         }
 
         public void PrepareAR()
@@ -194,6 +193,8 @@ namespace ARStreetLamp
             poleButton.Click += PoleButton_Click;
             lightButton.Click += LightButton_Click;
             deleteAllLampsButton.Click += DeleteAllLampsButton_Click;
+            addLampButton.Click += AddLampButton_Click;
+            createInstalationButton.Click += CreateInstalationButton_Click;
 
             rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
             heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
@@ -266,6 +267,46 @@ namespace ARStreetLamp
                     poleModels.Add(poleModel);
                 }
             });
+        }
+
+        private void CreateInstalationButton_Click(object sender, EventArgs e)
+        {
+            if (sceneLampModels.Count < 2)
+            {
+                ShowToast("Not enough lamps to create instalation!");
+                return;
+            }
+
+            int numOfEstParam = sceneLampModels.Count > 7 ? 7 : sceneLampModels.Count;
+
+            Matrix<double> H = Matrix<double>.Build.Dense(sceneLampModels.Count, numOfEstParam);
+            Matrix<double> y = Matrix<double>.Build.Dense(sceneLampModels.Count, numOfEstParam);
+            Matrix<double> bEst = Matrix<double>.Build.Dense(numOfEstParam, 1);
+
+            int i = 0;
+            foreach (var item in sceneLampModels)
+            {
+                H[i, 0] = item.baseElement.Position.X;
+                y[i, 0] = item.baseElement.Position.Z;
+                ++i;
+            }
+
+            bEst = (H.Transpose() * H).Inverse() * (H.Transpose() * y);
+
+            
+
+        }
+
+        private void AddLampButton_Click(object sender, EventArgs e)
+        {
+            sceneLampModels.Add(new LampModel(lampModels[selectedLampModel], ResourceCache, sceneLampModels.Count.ToString()));
+            selectedLamp = sceneLampModels.Count - 1;
+
+            heightSeekBar.Progress = 0;
+
+            sceneLampModels[selectedLamp].AddToScene(scene);
+
+            ShowToast("Lamps in scene: " + sceneLampModels.Count.ToString());
         }
 
         private void HeightSeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
@@ -387,6 +428,7 @@ namespace ARStreetLamp
     {
         public List<Node> lampElements;
         public Node glassElement;
+        public Material glassElementMaterial;
         public Node baseElement;
         public Node lightElement;
         public Light light;
@@ -417,9 +459,17 @@ namespace ARStreetLamp
                 node.SetScale(this.lampScale);
                 StaticModel model = node.CreateComponent<StaticModel>();
                 model.CastShadows = true;
-                model.Model = cache.GetModel(lampModelDefinition.lampElements[j] + @".mdl");
-                model.Material = cache.GetMaterial(lampModelDefinition.lampElementsMaterials[j] + @".xml");
 
+                bool wait = true;
+                Urho.Application.InvokeOnMain(() =>
+                {
+                    model.Model = cache.GetModel(lampModelDefinition.lampElements[j] + @".mdl");
+                    model.Material = cache.GetMaterial(lampModelDefinition.lampElementsMaterials[j] + @".xml");
+
+                    wait = false;
+                });
+
+                while (wait) { };
                 this.lampElements.Add(node);
             }
 
@@ -429,8 +479,12 @@ namespace ARStreetLamp
 
             StaticModel lightLampModel = lightLampNode.CreateComponent<StaticModel>();
             lightLampModel.CastShadows = true;
-            lightLampModel.Model = cache.GetModel(lampModelDefinition.glassElement + @".mdl");
-            lightLampModel.Material = cache.GetMaterial(lampModelDefinition.glassElementMaterial + @".xml");
+            Urho.Application.InvokeOnMain(() =>
+            {
+                lightLampModel.Model = cache.GetModel(lampModelDefinition.glassElement + @".mdl");
+                glassElementMaterial = cache.GetMaterial(lampModelDefinition.glassElementMaterial + @".xml");
+                lightLampModel.Material = glassElementMaterial;
+            });
             this.glassElement = lightLampNode;
 
             //Lamp light
@@ -442,16 +496,24 @@ namespace ARStreetLamp
                 lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
             }
 
+            //Light lampLightLight = lampLightNode.CreateComponent<Light>();
+            //lampLightLight.LightType = LightType.Point;
+            //lampLightLight.Length = 1;
+            //lampLightLight.Range = 0.8f;
+            //lampLightLight.Fov = 160.0f;
+            //lampLightLight.AspectRatio = 1.05f;
+            //lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
+            //lampLightLight.Brightness = 0.0f;
+            //lampLightLight.CastShadows = true;
+            //lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
+
             Light lampLightLight = lampLightNode.CreateComponent<Light>();
-            lampLightLight.LightType = LightType.Point;
-            lampLightLight.Length = 1;
-            lampLightLight.Range = 0.8f;
-            lampLightLight.Fov = 160.0f;
-            lampLightLight.AspectRatio = 1.05f;
-            lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
             lampLightLight.Brightness = 0.0f;
+            lampLightLight.LightType = LightType.Spot;
+            lampLightLight.Fov = 90.0f;
+            lampLightLight.Color = new Urho.Color(255.0f, 209.0f, 163.0f, 1.0f);
+            //lampLightLight.Color = new Color(1.0f, 0.819607f, 0.639216f, 1.0f);
             lampLightLight.CastShadows = true;
-            lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
 
             this.lightElement = lampLightNode;
             this.light = lampLightLight;
@@ -461,8 +523,11 @@ namespace ARStreetLamp
             baseNode.SetScale(this.lampScale);
             StaticModel baseModel = baseNode.CreateComponent<StaticModel>();
             baseModel.CastShadows = true;
-            baseModel.Model = cache.GetModel(lampModelDefinition.baseElement + @".mdl");
-            baseModel.Material = cache.GetMaterial(lampModelDefinition.baseElementMaterial + @".xml");
+            Urho.Application.InvokeOnMain(() =>
+            {
+                baseModel.Model = cache.GetModel(lampModelDefinition.baseElement + @".mdl");
+                baseModel.Material = cache.GetMaterial(lampModelDefinition.baseElementMaterial + @".xml");
+            });
             this.baseElement = baseNode;
         }
 
@@ -591,22 +656,27 @@ namespace ARStreetLamp
         public void TurnOn()
         {
             light.Brightness = 0.1f;
+            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(light.Color.R, light.Color.G, light.Color.B, 0.85f));
         }
 
         public void TurnOff()
         {
             light.Brightness = 0.0f;
+            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(1.0f, 1.0f, 1.0f, 0.5f));
         }
 
-        public void AddToScene(ref Scene scene)
+        public void AddToScene(Scene scene)
         {
-            foreach (var item in lampElements)
+            Urho.Application.InvokeOnMain(() =>
             {
-                scene.AddChild(item);
-            }
-            scene.AddChild(baseElement);
-            scene.AddChild(glassElement);
-            scene.AddChild(lightElement);
+                foreach (var item in lampElements)
+                {
+                    scene.AddChild(item);
+                }
+                scene.AddChild(baseElement);
+                scene.AddChild(glassElement);
+                scene.AddChild(lightElement);
+            });
         }
     }
 
@@ -633,6 +703,7 @@ namespace ARStreetLamp
         public float poleScale;
         public string name;
         public bool removed = false;
+        //private Node shadowNode;
 
         public PoleModel()
         {
@@ -666,6 +737,10 @@ namespace ARStreetLamp
             modelScalableElement.Model = cache.GetModel(poleModelDefinition.scalablePoleElement + @".mdl");
             modelScalableElement.Material = cache.GetMaterial(poleModelDefinition.scalablePoleElementMaterial + @".xml");
             this.scalablePoleElement = scalableElementNode;
+
+            //shadowNode = scalablePoleElement.CreateChild();
+            //shadowNode.Scale = new Vector3(20, 0.01f, 20);
+            //var plane = shadowNode.CreateComponent<Urho.SharpReality.TransparentPlaneWithShadows>();
         }
 
         public void Show()
@@ -675,6 +750,7 @@ namespace ARStreetLamp
                 item.Enabled = true;
             }
             scalablePoleElement.Enabled = true;
+            //shadowNode.Enabled = true;
         }
 
         public void Hide()
@@ -684,6 +760,7 @@ namespace ARStreetLamp
                 item.Enabled = false;
             }
             scalablePoleElement.Enabled = false;
+            //shadowNode.Enabled = false;
         }
 
         public void Remove()
@@ -695,6 +772,8 @@ namespace ARStreetLamp
             }
             scalablePoleElement.Remove();
             scalablePoleElement.Dispose();
+            //shadowNode.Remove();
+            //shadowNode.Dispose();
         }
 
         public void ScalePole(float scale)

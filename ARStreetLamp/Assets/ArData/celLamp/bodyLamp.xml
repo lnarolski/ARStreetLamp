@@ -2,7 +2,7 @@
 	<cull value="ccw"/>
 	<shadowcull value="ccw"/>
 	<fill value="solid"/>
-	<parameter name="MatDiffColor" value="0.171811 0.171811 0.171811 1"/>
+	<parameter name="MatDiffColor" value="0.2 0.2 0.2 1"/>
 	<parameter name="MatSpecColor" value="0 0 0 1"/>
 	<parameter name="MatEmissiveColor" value="0 0 0"/>
 	<parameter name="UOffset" value="1.0 0 0 0"/>

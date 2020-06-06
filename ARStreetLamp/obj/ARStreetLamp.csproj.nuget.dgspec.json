@@ -38,6 +38,10 @@
       "frameworks": {
         "monoandroid90": {
           "dependencies": {
+            "MathNet.Numerics": {
+              "target": "Package",
+              "version": "[4.11.0, )"
+            },
             "UrhoSharp": {
               "target": "Package",
               "version": "[1.9.67, )"

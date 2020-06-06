@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "MonoAndroid,Version=v9.0": {
+      "MathNet.Numerics/4.11.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MathNet.Numerics.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MathNet.Numerics.dll": {}
+        }
+      },
       "UrhoSharp/1.9.67": {
         "type": "package",
         "compile": {
@@ -752,6 +761,26 @@
     }
   },
   "libraries": {
+    "MathNet.Numerics/4.11.0": {
+      "sha512": "nmr86AZMGgLprxygcew8Q2BOlPbSYGIkponJMRBoO+CVohkE/CqYJ2KKMThVJUJ0obJxoYI7agCRe61XDVgZuw==",
+      "type": "package",
+      "path": "mathnet.numerics/4.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net40/MathNet.Numerics.dll",
+        "lib/net40/MathNet.Numerics.xml",
+        "lib/net461/MathNet.Numerics.dll",
+        "lib/net461/MathNet.Numerics.xml",
+        "lib/netstandard1.3/MathNet.Numerics.dll",
+        "lib/netstandard1.3/MathNet.Numerics.xml",
+        "lib/netstandard2.0/MathNet.Numerics.dll",
+        "lib/netstandard2.0/MathNet.Numerics.xml",
+        "mathnet.numerics.4.11.0.nupkg.sha512",
+        "mathnet.numerics.nuspec"
+      ]
+    },
     "UrhoSharp/1.9.67": {
       "sha512": "q+RQ+Y7/OEtOlQNNtwvub0BWxPdZnvjYoKfShViA7umahgLbJOwF9V7fl1OMBrIk2T6MySvMnA6m//fB24o8oQ==",
       "type": "package",
@@ -1568,6 +1597,7 @@
   },
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v9.0": [
+      "MathNet.Numerics >= 4.11.0",
       "UrhoSharp >= 1.9.67",
       "UrhoSharp.ARCore >= 1.9.67",
       "Xamarin.Android.Support.Core.Utils >= 28.0.0.3",
@@ -1614,6 +1644,10 @@
     "frameworks": {
       "monoandroid90": {
         "dependencies": {
+          "MathNet.Numerics": {
+            "target": "Package",
+            "version": "[4.11.0, )"
+          },
           "UrhoSharp": {
             "target": "Package",
             "version": "[1.9.67, )"

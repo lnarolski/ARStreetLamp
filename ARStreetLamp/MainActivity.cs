@@ -15,6 +15,9 @@ using Android.Content.Res;
 using System.IO;
 using Java.Nio.FileNio;
 using System.Collections.Generic;
+using Java.Lang;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ARStreetLamp
 {
@@ -34,6 +37,7 @@ namespace ARStreetLamp
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
@@ -41,7 +45,8 @@ namespace ARStreetLamp
             placeholder = FindViewById<RelativeLayout>(Resource.Id.UrhoSurfacePlaceHolder);
 
             hudButton = FindViewById<ToggleButton>(Resource.Id.hudButton);
-            hudButton.Click += (o, e) => {
+            hudButton.Click += (o, e) =>
+            {
                 if (hudButton.Checked)
                     ChangeVisibilityOfHUD(true);
                 else
@@ -93,13 +98,13 @@ namespace ARStreetLamp
                 {
                     lampModels = sr.ReadLine().Split(',');
                 }
-                catch (Exception) { }
+                catch (Java.Lang.Exception) { }
 
                 try
                 {
                     poleModels = sr.ReadLine().Split(',');
                 }
-                catch (Exception) { }
+                catch (Java.Lang.Exception) { }
             }
 
             var paths = new string[lampModels.Length + poleModels.Length];
@@ -121,10 +126,10 @@ namespace ARStreetLamp
             arrender.rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
             arrender.prevControlsScreenButton = FindViewById<Button>(Resource.Id.prevControlsScreenButton);
             arrender.nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
-            arrender.editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
+            arrender.addLampButton = FindViewById<Button>(Resource.Id.addLampButton);
             arrender.createInstalationButton = FindViewById<Button>(Resource.Id.createInstalationButton);
             arrender.deleteAllLampsButton = FindViewById<Button>(Resource.Id.deleteAllLampsButton);
-            arrender.editLampButton = FindViewById<Button>(Resource.Id.editLampButton);
+            arrender.editLampButton = FindViewById<Button>(Resource.Id.editLampsButton);
             arrender.prevSelLampButton = FindViewById<Button>(Resource.Id.prevSelLampButton);
             arrender.nextSelLampButton = FindViewById<Button>(Resource.Id.nextSelLampButton);
 
@@ -171,10 +176,10 @@ namespace ARStreetLamp
             ToggleButton lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
             SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
             SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
-            Button editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
+            Button addLampButton = FindViewById<Button>(Resource.Id.addLampButton);
             Button createInstalationButton = FindViewById<Button>(Resource.Id.createInstalationButton);
             Button deleteAllLampsButton = FindViewById<Button>(Resource.Id.deleteAllLampsButton);
-            Button editLampButton = FindViewById<Button>(Resource.Id.editLampButton);
+            Button editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
             Button prevSelLampButton = FindViewById<Button>(Resource.Id.prevSelLampButton);
             Button nextSelLampButton = FindViewById<Button>(Resource.Id.nextSelLampButton);
 
@@ -185,7 +190,7 @@ namespace ARStreetLamp
             editLampsButton.Visibility = ViewStates.Invisible;
             createInstalationButton.Visibility = ViewStates.Invisible;
             deleteAllLampsButton.Visibility = ViewStates.Invisible;
-            editLampButton.Visibility = ViewStates.Invisible;
+            addLampButton.Visibility = ViewStates.Invisible;
             prevSelLampButton.Visibility = ViewStates.Invisible;
             nextSelLampButton.Visibility = ViewStates.Invisible;
 
@@ -205,7 +210,7 @@ namespace ARStreetLamp
                     ShowToast("Edit lamps HUD");
                     break;
                 case 2:
-                    editLampButton.Visibility = ViewStates.Visible;
+                    addLampButton.Visibility = ViewStates.Visible;
                     prevSelLampButton.Visibility = ViewStates.Visible;
                     nextSelLampButton.Visibility = ViewStates.Visible;
                     ShowToast("Edit lamp HUD");
@@ -265,10 +270,10 @@ namespace ARStreetLamp
             SeekBar rotateSeekBar = FindViewById<SeekBar>(Resource.Id.rotateSeekBar);
             Button prevControlsScreenButton = FindViewById<Button>(Resource.Id.prevControlsScreenButton);
             Button nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
-            Button editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
+            Button addLampButton = FindViewById<Button>(Resource.Id.addLampButton);
             Button createInstalationButton = FindViewById<Button>(Resource.Id.createInstalationButton);
             Button deleteAllLampsButton = FindViewById<Button>(Resource.Id.deleteAllLampsButton);
-            Button editLampButton = FindViewById<Button>(Resource.Id.editLampButton);
+            Button editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
             Button prevSelLampButton = FindViewById<Button>(Resource.Id.prevSelLampButton);
             Button nextSelLampButton = FindViewById<Button>(Resource.Id.nextSelLampButton);
 
@@ -289,7 +294,7 @@ namespace ARStreetLamp
                 editLampsButton.Visibility = ViewStates.Invisible;
                 createInstalationButton.Visibility = ViewStates.Invisible;
                 deleteAllLampsButton.Visibility = ViewStates.Invisible;
-                editLampButton.Visibility = ViewStates.Invisible;
+                addLampButton.Visibility = ViewStates.Invisible;
                 prevSelLampButton.Visibility = ViewStates.Invisible;
                 nextSelLampButton.Visibility = ViewStates.Invisible;
             }

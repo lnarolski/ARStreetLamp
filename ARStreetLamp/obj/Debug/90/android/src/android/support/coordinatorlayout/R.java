@@ -80,10 +80,10 @@ public final class R {
 		public static final int action_image = 0x7f080014;
 		public static final int action_text = 0x7f08001a;
 		public static final int actions = 0x7f08001b;
-		public static final int async = 0x7f080021;
-		public static final int blocking = 0x7f080024;
-		public static final int bottom = 0x7f080025;
-		public static final int chronometer = 0x7f080030;
+		public static final int async = 0x7f080022;
+		public static final int blocking = 0x7f080025;
+		public static final int bottom = 0x7f080026;
+		public static final int chronometer = 0x7f080031;
 		public static final int end = 0x7f080047;
 		public static final int forever = 0x7f080052;
 		public static final int icon = 0x7f08005b;
