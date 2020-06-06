@@ -468,28 +468,21 @@ namespace ARStreetLamp
 
         public void Remove()
         {
-            Urho.Application.InvokeOnMain(() =>
-                {
-                    foreach (var item in lampElements)
-                    {
-                        item.Remove();
-                        item.Dispose();
-                    }
-                    baseElement.Remove();
-                    glassElement.Remove();
-                    light.Remove();
-                    lightElement.Remove();
+            foreach (var item in lampElements)
+            {
+                item.Remove();
+                item.Dispose();
+            }
+            baseElement.Remove();
+            glassElement.Remove();
 
-                    baseElement.Dispose();
-                    glassElement.Dispose();
-                    light.Dispose();
-                    lightElement.Dispose();
+            baseElement.Dispose();
+            glassElement.Dispose();
 
-                    if (pole != null)
-                    {
-                        pole.Remove();
-                    }
-                });
+            if (pole != null)
+            {
+                pole.Remove();
+            }
         }
 
         public void ShowPole()
@@ -639,6 +632,7 @@ namespace ARStreetLamp
         public Node scalablePoleElement;
         public float poleScale;
         public string name;
+        public bool removed = false;
 
         public PoleModel()
         {
@@ -694,16 +688,13 @@ namespace ARStreetLamp
 
         public void Remove()
         {
-            Urho.Application.InvokeOnMain(() =>
+            foreach (var item in poleElements)
             {
-                foreach (var item in poleElements)
-                {
-                    item.Remove();
-                    item.Dispose();
-                }
-                scalablePoleElement.Remove();
-                scalablePoleElement.Dispose();
-            });
+                item.Remove();
+                item.Dispose();
+            }
+            scalablePoleElement.Remove();
+            scalablePoleElement.Dispose();
         }
 
         public void ScalePole(float scale)
