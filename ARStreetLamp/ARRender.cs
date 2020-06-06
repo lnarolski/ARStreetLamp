@@ -540,9 +540,13 @@ namespace ARStreetLamp
             }
             baseElement.Remove();
             glassElement.Remove();
+            light.Remove();
+            lightElement.Remove();
 
             baseElement.Dispose();
             glassElement.Dispose();
+            light.Dispose();
+            lightElement.Dispose();
 
             if (pole != null)
             {
@@ -702,7 +706,6 @@ namespace ARStreetLamp
         public Node scalablePoleElement;
         public float poleScale;
         public string name;
-        public bool removed = false;
         //private Node shadowNode;
 
         public PoleModel()
