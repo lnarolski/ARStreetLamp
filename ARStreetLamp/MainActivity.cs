@@ -201,19 +201,19 @@ namespace ARStreetLamp
                     lightButton.Visibility = ViewStates.Visible;
                     heightSeekBar.Visibility = ViewStates.Visible;
                     rotateSeekBar.Visibility = ViewStates.Visible;
-                    ShowToast("Main HUD");
+                    //ShowToast("Main HUD");
                     break;
                 case 1:
                     editLampsButton.Visibility = ViewStates.Visible;
                     createInstalationButton.Visibility = ViewStates.Visible;
                     deleteAllLampsButton.Visibility = ViewStates.Visible;
-                    ShowToast("Edit lamps HUD");
+                    //ShowToast("Edit lamps HUD");
                     break;
                 case 2:
                     addLampButton.Visibility = ViewStates.Visible;
                     prevSelLampButton.Visibility = ViewStates.Visible;
                     nextSelLampButton.Visibility = ViewStates.Visible;
-                    ShowToast("Edit lamp HUD");
+                    //ShowToast("Edit lamp HUD");
                     break;
                 default:
                     break;

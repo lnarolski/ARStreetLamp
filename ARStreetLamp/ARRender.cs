@@ -195,10 +195,12 @@ namespace ARStreetLamp
             deleteAllLampsButton.Click += DeleteAllLampsButton_Click;
             addLampButton.Click += AddLampButton_Click;
             createInstalationButton.Click += CreateInstalationButton_Click;
+            nextSelLampButton.Click += NextSelLampButton_Click;
+            prevSelLampButton.Click += PrevSelLampButton_Click;
 
             rotateSeekBar.ProgressChanged += RotateSeekBar_ProgressChanged;
             heightSeekBar.ProgressChanged += HeightSeekBar_ProgressChanged;
-            
+
             Urho.Application.InvokeOnMain(() =>
             {
                 // Lamps
@@ -269,6 +271,38 @@ namespace ARStreetLamp
             });
         }
 
+        private void PrevSelLampButton_Click(object sender, EventArgs e)
+        {
+            if (selectedLamp < 0)
+            {
+                ShowToast("No lamps in scene!");
+                return;
+            }
+
+            if (selectedLamp == 0)
+                selectedLamp = sceneLampModels.Count - 1;
+            else
+                --selectedLamp;
+
+            ShowToast("Selected lamp: " + sceneLampModels[selectedLamp].name);
+        }
+
+        private void NextSelLampButton_Click(object sender, EventArgs e)
+        {
+            if (selectedLamp < 0)
+            {
+                ShowToast("No lamps in scene!");
+                return;
+            }
+
+            if (selectedLamp == sceneLampModels.Count - 1)
+                selectedLamp = 0;
+            else
+                ++selectedLamp;
+
+            ShowToast("Selected lamp: " + sceneLampModels[selectedLamp].name);
+        }
+
         private void CreateInstalationButton_Click(object sender, EventArgs e)
         {
             if (sceneLampModels.Count < 2)
@@ -293,7 +327,7 @@ namespace ARStreetLamp
 
             bEst = (H.Transpose() * H).Inverse() * (H.Transpose() * y);
 
-            
+
 
         }
 
@@ -337,7 +371,9 @@ namespace ARStreetLamp
 
             foreach (var item in sceneLampModels)
             {
-                item.RotateLamp(new Quaternion(0, e.Progress, 0));
+                {
+                    item.RotateLamp(new Quaternion(0, e.Progress, 0));
+                }
             }
         }
 
@@ -511,8 +547,8 @@ namespace ARStreetLamp
             lampLightLight.Brightness = 0.0f;
             lampLightLight.LightType = LightType.Spot;
             lampLightLight.Fov = 90.0f;
-            lampLightLight.Color = new Urho.Color(255.0f, 209.0f, 163.0f, 1.0f);
-            //lampLightLight.Color = new Color(1.0f, 0.819607f, 0.639216f, 1.0f);
+            //lampLightLight.Color = new Urho.Color(255.0f, 209.0f, 163.0f, 1.0f);
+            lampLightLight.Color = new Urho.Color(1.0f, 0.819607f, 0.639216f, 1.0f);
             lampLightLight.CastShadows = true;
 
             this.lightElement = lampLightNode;
@@ -533,25 +569,32 @@ namespace ARStreetLamp
 
         public void Remove()
         {
-            foreach (var item in lampElements)
+            bool wait = true;
+            Urho.Application.InvokeOnMain(() =>
             {
-                item.Remove();
-                item.Dispose();
-            }
-            baseElement.Remove();
-            glassElement.Remove();
-            light.Remove();
-            lightElement.Remove();
+                foreach (var item in lampElements)
+                {
+                    item.Remove();
+                    item.Dispose();
+                }
+                baseElement.Remove();
+                glassElement.Remove();
+                light.Remove();
+                lightElement.Remove();
 
-            baseElement.Dispose();
-            glassElement.Dispose();
-            light.Dispose();
-            lightElement.Dispose();
+                baseElement.Dispose();
+                glassElement.Dispose();
+                light.Dispose();
+                lightElement.Dispose();
 
-            if (pole != null)
-            {
-                pole.Remove();
-            }
+                if (pole != null)
+                {
+                    pole.Remove();
+                }
+
+                wait = false;
+            });
+            while (wait) { }
         }
 
         public void ShowPole()
@@ -640,27 +683,34 @@ namespace ARStreetLamp
 
         public void RotateLamp(Quaternion quaternion)
         {
-            foreach (var item in lampElements)
+            bool wait = true;
+            Urho.Application.InvokeOnMain(() =>
             {
-                item.Rotation = quaternion;
-            }
-            baseElement.Rotation = quaternion;
-            glassElement.Rotation = quaternion;
-            lightElement.Rotation = new Quaternion(90.0f, quaternion.Y, quaternion.Z);
+                foreach (var item in lampElements)
+                {
+                    item.Rotation = quaternion;
+                }
+                baseElement.Rotation = quaternion;
+                glassElement.Rotation = quaternion;
+                lightElement.Rotation = new Quaternion(90.0f, quaternion.Y, quaternion.Z);
 
-            var components = glassElement.Components.GetEnumerator();
-            if (components.MoveNext())
-            {
-                Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
-                centerOfGlass.Y -= 0.1f * lampScale;
-                lightElement.Position = centerOfGlass;
-            }
+                var components = glassElement.Components.GetEnumerator();
+                if (components.MoveNext())
+                {
+                    Vector3 centerOfGlass = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
+                    centerOfGlass.Y -= 0.1f * lampScale;
+                    lightElement.Position = centerOfGlass;
+                }
+                wait = false;
+            });
+            while (wait) { }
+
         }
 
         public void TurnOn()
         {
-            light.Brightness = 0.1f;
-            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(light.Color.R, light.Color.G, light.Color.B, 0.85f));
+            light.Brightness = 10.0f;
+            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(light.Color.R * 255, light.Color.G * 255, light.Color.B * 255, 0.85f));
         }
 
         public void TurnOff()
