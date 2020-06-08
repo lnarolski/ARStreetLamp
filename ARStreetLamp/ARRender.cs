@@ -98,13 +98,24 @@ namespace ARStreetLamp
             var cameraNode = scene.CreateChild(name: "Camera");
             var camera = cameraNode.CreateComponent<Urho.Camera>();
 
+            //// Light
+            //var lightNode = cameraNode.CreateChild();
+            //lightNode.SetDirection(new Vector3(1f, -1.0f, 1f));
+            //var light = lightNode.CreateComponent<Light>();
+            //light.Range = 10;
+            //light.LightType = LightType.Spot;
+            //light.CastShadows = true;
+            //Renderer.ShadowMapSize *= 4;
+
             // Light
-            var lightNode = cameraNode.CreateChild();
-            lightNode.SetDirection(new Vector3(1f, -1.0f, 1f));
-            var light = lightNode.CreateComponent<Light>();
-            light.Range = 10;
-            light.LightType = LightType.Spot;
-            light.CastShadows = true;
+            var LightNode = scene.CreateChild(name: "DirectionalLight");
+            LightNode.SetDirection(new Vector3(0.75f, -1.0f, 0f));
+            var Light = LightNode.CreateComponent<Light>();
+            Light.LightType = LightType.Directional;
+            Light.CastShadows = true;
+            Light.Brightness = 1.5f;
+            Light.ShadowResolution = 4;
+            Light.ShadowIntensity = 0.75f;
             Renderer.ShadowMapSize *= 4;
 
             // Viewport
@@ -327,7 +338,20 @@ namespace ARStreetLamp
 
             bEst = (H.Transpose() * H).Inverse() * (H.Transpose() * y);
 
+            //bool dialogClosed = false;
+            //bool dialogCanceled = false;
+            //int dialogNumOfNewLamps;
 
+            //InvokeOnMain(() =>
+            //{
+            //    var dialog = new NumOfNewLampsDialog(mainActivity, 42, this, 10, 1337);
+            //    dialog.Show(FragmentManager, "number");
+            //});
+
+            //while (!dialogClosed) { }
+
+            //if (dialogCanceled)
+            //    return;
 
         }
 
@@ -785,15 +809,17 @@ namespace ARStreetLamp
             Node scalableElementNode = new Node();
             scalableElementNode.Position = new Vector3(0, 0, 0.5f); // 50cm Z
             scalableElementNode.SetScale(this.poleScale);
+
+            //shadowNode = scalableElementNode.CreateChild();
+            //shadowNode.Scale = new Vector3(10, 0.1f, 10);
+            //shadowNode.Enabled = false;
+            //var plane = shadowNode.CreateComponent<Urho.SharpReality.TransparentPlaneWithShadows>();
+
             StaticModel modelScalableElement = scalableElementNode.CreateComponent<StaticModel>();
             modelScalableElement.CastShadows = true;
             modelScalableElement.Model = cache.GetModel(poleModelDefinition.scalablePoleElement + @".mdl");
             modelScalableElement.Material = cache.GetMaterial(poleModelDefinition.scalablePoleElementMaterial + @".xml");
             this.scalablePoleElement = scalableElementNode;
-
-            //shadowNode = scalablePoleElement.CreateChild();
-            //shadowNode.Scale = new Vector3(20, 0.01f, 20);
-            //var plane = shadowNode.CreateComponent<Urho.SharpReality.TransparentPlaneWithShadows>();
         }
 
         public void Show()
@@ -823,10 +849,10 @@ namespace ARStreetLamp
                 item.Remove();
                 item.Dispose();
             }
-            scalablePoleElement.Remove();
-            scalablePoleElement.Dispose();
             //shadowNode.Remove();
             //shadowNode.Dispose();
+            scalablePoleElement.Remove();
+            scalablePoleElement.Dispose();
         }
 
         public void ScalePole(float scale)
@@ -837,6 +863,7 @@ namespace ARStreetLamp
                 item.SetScale(poleScale);
             }
             scalablePoleElement.SetScale(scale);
+            //shadowNode.SetScale(scale);
         }
 
         public void MovePole(Vector3 vector3)
@@ -846,11 +873,13 @@ namespace ARStreetLamp
                 item.Position = vector3;
             }
             scalablePoleElement.Position = vector3;
+            //shadowNode.Position = vector3;
         }
 
         public void ChangeHeight(Node baseNode, float yPosition)
         {
             scalablePoleElement.Scale = new Vector3(poleScale, System.Math.Abs(baseNode.Position.Y - yPosition) / 2, poleScale);
+            //shadowNode.Scale = new Vector3(1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2);
         }
 
         public void AddToScene(ref Scene scene)

@@ -5,6 +5,7 @@ background;obj\Debug\90\res\mipmap-anydpi-v26\ic_launcher.xml
 background;obj\Debug\90\res\mipmap-anydpi-v26\ic_launcher_round.xml
 Button;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\layout\__arcore_education.xml
 Button;obj\Debug\90\res\layout\activity_main.xml
+Button;obj\Debug\90\res\layout\numofnewlampsdialog.xml
 cache-path;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\39\jl\res\xml\xamarin_essentials_fileprovider_file_paths.xml
 color;obj\Debug\90\res\values\colors.xml
 color;obj\Debug\90\res\values\ic_launcher_background.xml
@@ -94,8 +95,11 @@ FrameLayout;obj\Debug\90\res\layout\activity_main.xml
 GridLayout;obj\Debug\90\res\layout\activity_main.xml
 item;obj\Debug\90\res\values\styles.xml
 LinearLayout;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\layout\__arcore_education.xml
+LinearLayout;obj\Debug\90\res\layout\numofnewlampsdialog.xml
+NumberPicker;obj\Debug\90\res\layout\numofnewlampsdialog.xml
 paths;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\39\jl\res\xml\xamarin_essentials_fileprovider_file_paths.xml
 RelativeLayout;obj\Debug\90\res\layout\activity_main.xml
+RelativeLayout;obj\Debug\90\res\layout\numofnewlampsdialog.xml
 resources;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values\values.xml
 resources;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values-af\values.xml
 resources;C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\lp\0\jl\res\values-am\values.xml
