@@ -571,6 +571,7 @@ namespace ARStreetLamp
             lampLightLight.Brightness = 0.0f;
             lampLightLight.LightType = LightType.Spot;
             lampLightLight.Fov = 90.0f;
+            lampLightLight.Range = 2.0f;
             //lampLightLight.Color = new Urho.Color(255.0f, 209.0f, 163.0f, 1.0f);
             lampLightLight.Color = new Urho.Color(1.0f, 0.819607f, 0.639216f, 1.0f);
             lampLightLight.CastShadows = true;
