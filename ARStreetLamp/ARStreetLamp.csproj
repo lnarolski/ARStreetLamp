@@ -83,6 +83,10 @@
     <AndroidAsset Include="Assets\ArData\standardPole\poleSmooth.mdl" />
     <AndroidAsset Include="Assets\ArData\standardPole\poleStandSmoothNoScale.mdl" />
     <AndroidAsset Include="Assets\ArData\standardPole\poleStandNoScale.mdl" />
+    <AndroidAsset Include="Assets\ArData\kalLamp\Glass.mdl" />
+    <AndroidAsset Include="Assets\ArData\kalLamp\Lenses.mdl" />
+    <AndroidAsset Include="Assets\ArData\kalLamp\Base.mdl" />
+    <AndroidAsset Include="Assets\ArData\kalLamp\Body.mdl" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -172,6 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\NumOfNewLampsDIalog.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\ArData\kalLamp\config.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

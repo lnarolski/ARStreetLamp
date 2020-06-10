@@ -132,6 +132,7 @@ namespace ARStreetLamp
             arrender.editLampButton = FindViewById<Button>(Resource.Id.editLampsButton);
             arrender.prevSelLampButton = FindViewById<Button>(Resource.Id.prevSelLampButton);
             arrender.nextSelLampButton = FindViewById<Button>(Resource.Id.nextSelLampButton);
+            arrender.editLampsButton = FindViewById<Button>(Resource.Id.editLampsButton);
 
             arrender.mainActivity = this;
             arrender.poleModelsString = poleModels;

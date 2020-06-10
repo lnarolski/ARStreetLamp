@@ -1,0 +1,5 @@
+﻿kalLamp/Body.mdl,kalLamp/Lenses.mdl
+celLamp/bodyLamp.xml,celLamp/lensesLamp.xml
+kalLamp/Glass.mdl,celLamp/glassLamp.xml
+kalLamp/Base.mdl,celLamp/bodyLamp.xml
+0.4674199

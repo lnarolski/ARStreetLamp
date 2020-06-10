@@ -1,4 +1,4 @@
-﻿poleStandNuts,poleStandNoScale
-poleStandNuts,poleStand
-Pole,Pole
+﻿standardPole/poleStandNuts.mdl,standardPole/poleStandNoScale.mdl
+standardPole/poleStandNuts.xml,standardPole/poleStand.xml
+standardPole/Pole.mdl,standardPole/Pole.xml
 0.0397306915

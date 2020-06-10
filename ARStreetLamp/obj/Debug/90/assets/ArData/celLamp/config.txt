@@ -1,5 +1,5 @@
-﻿Body,Lenses,Mirror
-bodyLamp,lensesLamp,waterMirrorLamp
-Glass,glassLamp
-Base,bodyLamp
+﻿celLamp/Body.mdl,celLamp/Lenses.mdl,celLamp/Mirror.mdl
+celLamp/bodyLamp.xml,celLamp/lensesLamp.xml,celLamp/waterMirrorLamp.xml
+celLamp/Glass.mdl,celLamp/glassLamp.xml
+celLamp/Base.mdl,celLamp/bodyLamp.xml
 0.4674199
