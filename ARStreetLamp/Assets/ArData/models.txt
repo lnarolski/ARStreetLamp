@@ -1,2 +1,2 @@
-﻿celLamp,kalLamp
+﻿celLamp,kalLamp,m48Lamp
 standardPole
