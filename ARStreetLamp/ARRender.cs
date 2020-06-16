@@ -23,7 +23,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace ARStreetLamp
 {
-    class ARRender : Urho.Application
+    public class ARRender : Urho.Application
     {
         private Zone zone;
         private Viewport viewport;
@@ -39,7 +39,7 @@ namespace ARStreetLamp
 
         private Scene scene;
 
-        public Activity mainActivity;
+        public MainActivity mainActivity;
         private Toast toast;
 
         public string[] lampModelsString;
@@ -365,21 +365,16 @@ namespace ARStreetLamp
 
             bEst = (H.Transpose() * H).Inverse() * (H.Transpose() * y);
 
-            //bool dialogClosed = false;
-            //bool dialogCanceled = false;
-            //int dialogNumOfNewLamps;
+            var dialog = new MainActivity.NumOfNewLampsDialog(mainActivity, mainActivity);
+            dialog.Show(mainActivity.FragmentManager, "numOfNewLamps");
+        }
 
-            //InvokeOnMain(() =>
-            //{
-            //    var dialog = new NumOfNewLampsDialog(mainActivity, 42, this, 10, 1337);
-            //    dialog.Show(FragmentManager, "number");
-            //});
+        public void StartCreatingNewInstallation(int numOfLamps)
+        {
+            if (numOfLamps == -1)
+                return;
 
-            //while (!dialogClosed) { }
-
-            //if (dialogCanceled)
-            //    return;
-
+            ShowToast("Selected value: " + numOfLamps.ToString());
         }
 
         private void AddLampButton_Click(object sender, EventArgs e)
@@ -862,7 +857,7 @@ namespace ARStreetLamp
         public void TurnOn()
         {
             light.Brightness = 10.0f;
-            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(light.Color.R * 255, light.Color.G * 255, light.Color.B * 255, 0.85f));
+            glassElementMaterial.SetShaderParameter("MatDiffColor", new Vector4(light.Color.R * 255, light.Color.G * 255, light.Color.B * 255, 0.6f));
 
             isLightTurnedOn = true;
         }

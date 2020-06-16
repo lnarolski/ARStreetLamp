@@ -290,3 +290,4 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\E580C5
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\395DC930E3C8AB0C.flata
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\res\layout\numofnewlampsdialog.xml
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\crc64c8a5a5af67626084\NumOfNewLampsDialog.java
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\crc64c8a5a5af67626084\MainActivity_NumOfNewLampsDialog.java

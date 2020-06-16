@@ -18,14 +18,15 @@ using System.Collections.Generic;
 using Java.Lang;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Content;
 
 namespace ARStreetLamp
 {
     [Activity(Label = "ARStreetLamp", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : AppCompatActivity, NumberPicker.IOnValueChangeListener
     {
         bool launched;
-        ARRender arrender;
+        public ARRender arrender;
         RelativeLayout placeholder;
         UrhoSurfacePlaceholder surface;
         ToggleButton hudButton;
@@ -298,6 +299,49 @@ namespace ARStreetLamp
                 addLampButton.Visibility = ViewStates.Invisible;
                 prevSelLampButton.Visibility = ViewStates.Invisible;
                 nextSelLampButton.Visibility = ViewStates.Invisible;
+            }
+        }
+
+        public void OnValueChange(NumberPicker picker, int oldVal, int newVal)
+        {
+            
+        }
+
+        public class NumOfNewLampsDialog : Android.App.DialogFragment, NumberPicker.IOnValueChangeListener
+        {
+            private readonly Context _context;
+            private readonly int _min = 2, _max = 100, _current = 2;
+            private readonly NumberPicker.IOnValueChangeListener _listener;
+            public MainActivity mainActivity;
+
+            public NumOfNewLampsDialog(MainActivity context, NumberPicker.IOnValueChangeListener listener)
+            {
+                _context = context;
+                _listener = listener;
+                mainActivity = context;
+            }
+
+            public override Dialog OnCreateDialog(Bundle savedState)
+            {
+                var inflater = (LayoutInflater)_context.GetSystemService(Context.LayoutInflaterService);
+                var view = inflater.Inflate(Resource.Layout.NumOfNewLampsDIalog, null);
+                var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
+                numberPicker.MaxValue = _max;
+                numberPicker.MinValue = _min;
+                numberPicker.Value = _current;
+                numberPicker.SetOnValueChangedListener(_listener);
+
+                var dialog = new Android.App.AlertDialog.Builder(_context);
+                dialog.SetTitle("Select number of new lamps:");
+                dialog.SetView(view);
+                dialog.SetNegativeButton("Cancel", (s, a) => { mainActivity.arrender.StartCreatingNewInstallation(-1); });
+                dialog.SetPositiveButton("OK", (s, a) => { mainActivity.arrender.StartCreatingNewInstallation(view.FindViewById<NumberPicker>(Resource.Id.numberPicker).Value); });
+                return dialog.Create();
+            }
+
+            public void OnValueChange(NumberPicker picker, int oldVal, int newVal)
+            {
+                _listener.OnValueChange(picker, oldVal, newVal);
             }
         }
     }

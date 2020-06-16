@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="ARRender.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="NumOfNewLampsDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
   </ItemGroup>

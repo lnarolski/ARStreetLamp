@@ -4,7 +4,8 @@ package crc64c8a5a5af67626084;
 public class MainActivity
 	extends android.support.v7.app.AppCompatActivity
 	implements
-		mono.android.IGCUserPeer
+		mono.android.IGCUserPeer,
+		android.widget.NumberPicker.OnValueChangeListener
 {
 /** @hide */
 	public static final String __md_methods;
@@ -17,6 +18,7 @@ public class MainActivity
 			"n_onDestroy:()V:GetOnDestroyHandler\n" +
 			"n_onBackPressed:()V:GetOnBackPressedHandler\n" +
 			"n_onLowMemory:()V:GetOnLowMemoryHandler\n" +
+			"n_onValueChange:(Landroid/widget/NumberPicker;II)V:GetOnValueChange_Landroid_widget_NumberPicker_IIHandler:Android.Widget.NumberPicker/IOnValueChangeListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
 			"";
 		mono.android.Runtime.register ("ARStreetLamp.MainActivity, ARStreetLamp", MainActivity.class, __md_methods);
 	}
@@ -84,6 +86,14 @@ public class MainActivity
 	}
 
 	private native void n_onLowMemory ();
+
+
+	public void onValueChange (android.widget.NumberPicker p0, int p1, int p2)
+	{
+		n_onValueChange (p0, p1, p2);
+	}
+
+	private native void n_onValueChange (android.widget.NumberPicker p0, int p1, int p2);
 
 	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
