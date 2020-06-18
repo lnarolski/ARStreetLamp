@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QSWAqfrW0OILjzAmsInCMLUwtSSsxkVJW9ALf55aGEyyHNWoYEi06N+UBYEOdpHwWjxC+e1Q21dakTQkxOk4pQ==",
+  "dgSpecHash": "T/5TXr4UmOwTSOUriHhzqFyQvyADjNfWGs80dudQeag+KwYDzqQ7yKy/oPmqWIzZOVltqO+24be7xjuOwDXW4A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
+  "projectFilePath": "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lukasz\\.nuget\\packages\\mathnet.numerics\\4.11.0\\mathnet.numerics.4.11.0.nupkg.sha512",
     "C:\\Users\\Lukasz\\.nuget\\packages\\urhosharp\\1.9.67\\urhosharp.1.9.67.nupkg.sha512",

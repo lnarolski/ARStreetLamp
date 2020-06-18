@@ -4106,7 +4106,7 @@ namespace ARStreetLamp
 			public const int notification_template_part_time = 2131427381;
 			
 			// aapt resource value: 0x7F0B0036
-			public const int NumOfNewLampsDIalog = 2131427382;
+			public const int NumOfNewLampsDialog = 2131427382;
 			
 			// aapt resource value: 0x7F0B0037
 			public const int select_dialog_item_material = 2131427383;

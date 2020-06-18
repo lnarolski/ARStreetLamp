@@ -25,11 +25,11 @@ public class MainActivity_NumOfNewLampsDialog
 			mono.android.TypeManager.Activate ("ARStreetLamp.MainActivity+NumOfNewLampsDialog, ARStreetLamp", "", this, new java.lang.Object[] {  });
 	}
 
-	public MainActivity_NumOfNewLampsDialog (crc64c8a5a5af67626084.MainActivity p0, android.widget.NumberPicker.OnValueChangeListener p1)
+	public MainActivity_NumOfNewLampsDialog (crc64c8a5a5af67626084.MainActivity p0, android.widget.NumberPicker.OnValueChangeListener p1, int p2)
 	{
 		super ();
 		if (getClass () == MainActivity_NumOfNewLampsDialog.class)
-			mono.android.TypeManager.Activate ("ARStreetLamp.MainActivity+NumOfNewLampsDialog, ARStreetLamp", "ARStreetLamp.MainActivity, ARStreetLamp:Android.Widget.NumberPicker+IOnValueChangeListener, Mono.Android", this, new java.lang.Object[] { p0, p1 });
+			mono.android.TypeManager.Activate ("ARStreetLamp.MainActivity+NumOfNewLampsDialog, ARStreetLamp", "ARStreetLamp.MainActivity, ARStreetLamp:Android.Widget.NumberPicker+IOnValueChangeListener, Mono.Android:System.Int32, mscorlib", this, new java.lang.Object[] { p0, p1, p2 });
 	}
 
 

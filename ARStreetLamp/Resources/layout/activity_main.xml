@@ -135,7 +135,7 @@
         <Button
             android:layout_row="1"
             android:layout_column="0"
-            android:text="Edit\nlamps"
+            android:text="Change\nlamps"
             android:textSize="9sp"
             android:visibility="invisible"
             android:layout_width="0dp"

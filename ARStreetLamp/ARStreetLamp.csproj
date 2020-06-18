@@ -180,7 +180,7 @@
     <AndroidAsset Include="Assets\ArData\standardPole\config.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\NumOfNewLampsDIalog.xml" />
+    <AndroidResource Include="Resources\layout\NumOfNewLampsDialog.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\ArData\kalLamp\config.txt" />

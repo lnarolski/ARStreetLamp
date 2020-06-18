@@ -314,17 +314,18 @@ namespace ARStreetLamp
             private readonly NumberPicker.IOnValueChangeListener _listener;
             public MainActivity mainActivity;
 
-            public NumOfNewLampsDialog(MainActivity context, NumberPicker.IOnValueChangeListener listener)
+            public NumOfNewLampsDialog(MainActivity context, NumberPicker.IOnValueChangeListener listener, int current)
             {
                 _context = context;
                 _listener = listener;
                 mainActivity = context;
+                _current = current;
             }
 
             public override Dialog OnCreateDialog(Bundle savedState)
             {
                 var inflater = (LayoutInflater)_context.GetSystemService(Context.LayoutInflaterService);
-                var view = inflater.Inflate(Resource.Layout.NumOfNewLampsDIalog, null);
+                var view = inflater.Inflate(Resource.Layout.NumOfNewLampsDialog, null);
                 var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
                 numberPicker.MaxValue = _max;
                 numberPicker.MinValue = _min;

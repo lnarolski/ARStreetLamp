@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj": {}
+    "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj": {
+    "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
+        "projectUniqueName": "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
         "projectName": "ARStreetLamp",
-        "projectPath": "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
+        "projectPath": "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\ARStreetLamp.csproj",
         "packagesPath": "C:\\Users\\Lukasz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lukasz\\source\\repos\\ARStreetLamp\\ARStreetLamp\\obj\\",
+        "outputPath": "C:\\Users\\Lukasz\\Source\\Repos\\ARStreetLamp\\ARStreetLamp\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [

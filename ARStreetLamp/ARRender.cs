@@ -56,6 +56,8 @@ namespace ARStreetLamp
 
         private int selectedLamp = -1;
 
+        private int selectedValNumOfNewLampsDialog = 2;
+
         internal Button prevControlsScreenButton;
         internal Button nextControlsScreenButton;
         internal Button editLampsButton;
@@ -303,12 +305,23 @@ namespace ARStreetLamp
             }
 
             int nextLampDefinition = GetNextLampDefinition(sceneLampModels[selectedLamp].lampDefinitionNum);
-            sceneLampModels[selectedLamp].lampDefinitionNum = nextLampDefinition;
-
-            sceneLampModels[selectedLamp].ChangeLamp(lampModels[sceneLampModels[selectedLamp].lampDefinitionNum], ResourceCache);
-            sceneLampModels[selectedLamp].AddToScene(scene);
-
             selectedLampModel = nextLampDefinition;
+
+            foreach (var item in sceneLampModels)
+            {
+                item.lampDefinitionNum = nextLampDefinition;
+
+                item.ChangeLamp(lampModels[item.lampDefinitionNum], ResourceCache);
+                item.AddToScene(scene);
+            }
+
+            //int nextLampDefinition = GetNextLampDefinition(sceneLampModels[selectedLamp].lampDefinitionNum);
+            //sceneLampModels[selectedLamp].lampDefinitionNum = nextLampDefinition;
+
+            //sceneLampModels[selectedLamp].ChangeLamp(lampModels[sceneLampModels[selectedLamp].lampDefinitionNum], ResourceCache);
+            //sceneLampModels[selectedLamp].AddToScene(scene);
+
+            //selectedLampModel = nextLampDefinition;
         }
 
         private void PrevSelLampButton_Click(object sender, EventArgs e)
@@ -351,7 +364,7 @@ namespace ARStreetLamp
                 return;
             }
 
-            var dialog = new MainActivity.NumOfNewLampsDialog(mainActivity, mainActivity);
+            var dialog = new MainActivity.NumOfNewLampsDialog(mainActivity, mainActivity, selectedValNumOfNewLampsDialog);
             dialog.Show(mainActivity.FragmentManager, "numOfNewLamps");
         }
 
@@ -359,6 +372,8 @@ namespace ARStreetLamp
         {
             if (numOfNewLamps == -1)
                 return;
+
+            selectedValNumOfNewLampsDialog = numOfNewLamps;
 
             //int numOfEstParam = sceneLampModels.Count > 7 ? 7 : sceneLampModels.Count;
             int numOfEstParam = 2;
@@ -511,6 +526,8 @@ namespace ARStreetLamp
                 }
             }
             ////////////////////////////////////////
+
+            selectedLamp = sceneLampModels.Count - 1;
 
             ShowToast("Installation created");
         }
