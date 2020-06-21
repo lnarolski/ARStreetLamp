@@ -281,12 +281,16 @@ namespace ARStreetLamp
 
             if (state)
             {
+                arrender.ShowingHUD();
+
                 prevControlsScreenButton.Visibility = Android.Views.ViewStates.Visible;
                 nextControlsScreenButton.Visibility = Android.Views.ViewStates.Visible;
                 SetHud(hudScreenNum);
             }
             else
             {
+                arrender.HidingHUD();
+
                 poleButton.Visibility = Android.Views.ViewStates.Invisible;
                 lightButton.Visibility = Android.Views.ViewStates.Invisible;
                 heightSeekBar.Visibility = Android.Views.ViewStates.Invisible;

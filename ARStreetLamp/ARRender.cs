@@ -68,7 +68,11 @@ namespace ARStreetLamp
         internal Button nextSelLampButton;
         internal Button addLampButton;
 
+        private List<Node> scenePlanes;
+        private bool editingPlanesList;
+
         public ARCoreComponent ArCore { get; private set; }
+        public bool HUDVisible { get; private set; } = true;
 
         public ARRender(ApplicationOptions options) : base(options) { }
 
@@ -87,9 +91,12 @@ namespace ARStreetLamp
 
         protected override void Start()
         {
+            UnhandledException += ARRender_UnhandledException;
+
             lampModels = new List<LampModelDefinition>();
             poleModels = new List<PoleModelDefinition>();
             sceneLampModels = new List<LampModel>();
+            scenePlanes = new List<Node>();
 
             // 3d scene with octree and ambient light
             scene = new Scene(Context);
@@ -141,11 +148,70 @@ namespace ARStreetLamp
             Input.TouchEnd += OnTouchEnd;
         }
 
+        private void ARRender_UnhandledException(object sender, Urho.UnhandledExceptionEventArgs e)
+        {
+            ShowToast(e.ToString());
+        }
+
         void ArCore_ConfigRequested(Config config)
         {
             config.SetPlaneFindingMode(Config.PlaneFindingMode.Horizontal);
             config.SetLightEstimationMode(Config.LightEstimationMode.AmbientIntensity);
             config.SetUpdateMode(Config.UpdateMode.LatestCameraImage); //non blocking
+        }
+
+        void HidePlanes()
+        {
+            while (editingPlanesList) { }
+
+            editingPlanesList = true;
+
+            bool wait = true;
+            InvokeOnMain(() =>
+            {
+                foreach (var plane in scenePlanes)
+                {
+                    plane.Enabled = false;
+                }
+                wait = false;
+            });
+            while (wait) { }
+
+            editingPlanesList = false;
+        }
+
+        void ShowPlanes()
+        {
+            while (editingPlanesList) { }
+
+            editingPlanesList = true;
+
+            //bool wait = true;
+            InvokeOnMain(() =>
+            {
+                foreach (var plane in scenePlanes)
+                {
+                    plane.Enabled = true;
+                }
+                //wait = false;
+            });
+            //while (wait) { }
+
+            editingPlanesList = false;
+        }
+
+        public void ShowingHUD()
+        {
+            HUDVisible = true;
+
+            ShowPlanes();
+        }
+
+        public void HidingHUD()
+        {
+            HUDVisible = false;
+
+            HidePlanes();
         }
 
         void OnTouchBegin(TouchBeginEventArgs e)
@@ -189,12 +255,62 @@ namespace ARStreetLamp
             }
         }
 
+        private void RemoveScenePlanes()
+        {
+            foreach (var item in scenePlanes)
+            {
+                item.Remove();
+                item.Dispose();
+            }
+
+            scenePlanes.Clear();
+        }
+
         // called by the update loop
         void OnARFrameUpdated(Com.Google.AR.Core.Frame arFrame)
         {
             currentFrame = arFrame;
-            var anchors = arFrame.UpdatedAnchors;
-            //TODO: visulize anchors (don't forget ARCore uses RHD coordinate system)
+
+            if (HUDVisible)
+            {
+                while (editingPlanesList) { }
+                editingPlanesList = true;
+
+                // Showing detected planes for placing lamp models
+                RemoveScenePlanes();
+                foreach (var p in ArCore.Session.GetAllTrackables(Java.Lang.Class.FromType(typeof(Com.Google.AR.Core.Plane))))
+                {
+                    var planeArCore = (Com.Google.AR.Core.Plane)p;
+                    var pose = planeArCore.CenterPose;
+
+                    var planeNode = new Node();
+                    var plane = planeNode.CreateComponent<StaticModel>();
+                    planeNode.Position = new Urho.Vector3(pose.Tx(), pose.Ty(), -pose.Tz());
+                    planeNode.Rotation = new Urho.Quaternion(0.0f, pose.Qy() * 360.0f, 0.0f);
+                    planeNode.Scale = new Urho.Vector3(planeArCore.ExtentX, 1, planeArCore.ExtentZ);
+                    plane.Model = CoreAssets.Models.Plane;
+
+                    var tileMaterial = new Material();
+                    tileMaterial.SetTexture(TextureUnit.Diffuse, ResourceCache.GetTexture2D("PlaneTile.png"));
+                    var tech = new Technique();
+                    var pass = tech.CreatePass("alpha");
+                    pass.DepthWrite = false;
+                    pass.BlendMode = BlendMode.Alpha;
+                    pass.PixelShader = "PlaneTile";
+                    pass.VertexShader = "PlaneTile";
+                    tileMaterial.SetTechnique(0, tech);
+                    tileMaterial.SetShaderParameter("MeshColor", new Urho.Color(Randoms.Next(), 1, Randoms.Next()));
+                    tileMaterial.SetShaderParameter("MeshAlpha", 0.75f); // set 0.0f if you want to hide them
+                    tileMaterial.SetShaderParameter("MeshScale", 32.0f);
+
+                    plane.Material = tileMaterial;
+
+                    scene.AddChild(planeNode);
+                    scenePlanes.Add(planeNode);
+                }
+
+                editingPlanesList = false;
+            }
 
             // Adjust our ambient light based on the light estimates ARCore provides each frame
             var lightEstimate = arFrame.LightEstimate;
