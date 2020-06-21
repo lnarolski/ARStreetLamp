@@ -302,3 +302,14 @@ C:\Users\Lukasz\Source\Repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\0D1AD9
 C:\Users\Lukasz\Source\Repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\D1C7D5EBFECB5512.flata
 C:\Users\Lukasz\Source\Repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\9583BA22EBCB482A.flata
 C:\Users\Lukasz\Source\Repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\flata\CE23EA1441ED8D21.flata
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\42AFA4D701162256.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\06EBCB1E14163F6E.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\DD6A77CD768EBC14.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\11A6C696488E9B5C.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\65228E3967E95BED.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\EDAA50AB4CE9619D.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\495EB65C82CB1B82.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\0D1AD99597CB06BA.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\D1C7D5EBFECB5512.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\9583BA22EBCB482A.stamp
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\CE23EA1441ED8D21.stamp

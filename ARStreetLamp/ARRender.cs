@@ -419,7 +419,13 @@ namespace ARStreetLamp
             }
             //////////////////////////////
 
-            float height = sceneLampModels[foundLampsIndexes[0]].baseElement.Position.Y;
+            // Calculating mean heigth
+            float height = sceneLampModels[0].yPosition;
+            for (int j = 1; j < sceneLampModels.Count; j++)
+            {
+                height = (height + sceneLampModels[j].yPosition) / 2;
+            }
+            //////////////////////////
 
             // Calculating estimated function values
             double[] estFuncVal = new double[2] { 0.0, 0.0 };
