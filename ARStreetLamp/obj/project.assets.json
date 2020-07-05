@@ -11,6 +11,32 @@
           "lib/netstandard2.0/MathNet.Numerics.dll": {}
         }
       },
+      "Plugin.Permissions/6.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Android.Support.Compat": "28.0.0.3",
+          "Xamarin.Android.Support.Core.Utils": "28.0.0.3",
+          "Xamarin.Essentials": "1.5.2"
+        },
+        "frameworkAssemblies": [
+          "Java.Interop"
+        ],
+        "compile": {
+          "lib/monoandroid90/Plugin.Permissions.dll": {}
+        },
+        "runtime": {
+          "lib/monoandroid90/Plugin.Permissions.dll": {}
+        }
+      },
+      "SunCalcNet/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/SunCalcNet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SunCalcNet.dll": {}
+        }
+      },
       "UrhoSharp/1.9.67": {
         "type": "package",
         "compile": {
@@ -745,7 +771,7 @@
           "build/monoandroid90/Xamarin.Android.Support.ViewPager.targets": {}
         }
       },
-      "Xamarin.Essentials/1.5.2": {
+      "Xamarin.Essentials/1.5.3.2": {
         "type": "package",
         "dependencies": {
           "Xamarin.Android.Support.Compat": "28.0.0.3",
@@ -779,6 +805,49 @@
         "lib/netstandard2.0/MathNet.Numerics.xml",
         "mathnet.numerics.4.11.0.nupkg.sha512",
         "mathnet.numerics.nuspec"
+      ]
+    },
+    "Plugin.Permissions/6.0.1": {
+      "sha512": "na/0FNhyKmSicANWZMLSM0y/FW2AvLoawX3lsvBpELwP15sdJRyuBhRKk1OQjRoNrmTIewcON1tJFyydjMGWcA==",
+      "type": "package",
+      "path": "plugin.permissions/6.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/monoandroid10.0/Plugin.Permissions.dll",
+        "lib/monoandroid10.0/Plugin.Permissions.pdb",
+        "lib/monoandroid80/Plugin.Permissions.dll",
+        "lib/monoandroid80/Plugin.Permissions.pdb",
+        "lib/monoandroid81/Plugin.Permissions.dll",
+        "lib/monoandroid81/Plugin.Permissions.pdb",
+        "lib/monoandroid90/Plugin.Permissions.dll",
+        "lib/monoandroid90/Plugin.Permissions.pdb",
+        "lib/netstandard1.0/Plugin.Permissions.dll",
+        "lib/netstandard1.0/Plugin.Permissions.pdb",
+        "lib/netstandard2.0/Plugin.Permissions.dll",
+        "lib/netstandard2.0/Plugin.Permissions.pdb",
+        "lib/uap10.0.16299/Plugin.Permissions.dll",
+        "lib/uap10.0.16299/Plugin.Permissions.pdb",
+        "lib/uap10.0.16299/Plugin.Permissions.pri",
+        "lib/xamarinios10/Plugin.Permissions.dll",
+        "lib/xamarinios10/Plugin.Permissions.pdb",
+        "lib/xamarintvos10/Plugin.Permissions.dll",
+        "lib/xamarintvos10/Plugin.Permissions.pdb",
+        "plugin.permissions.6.0.1.nupkg.sha512",
+        "plugin.permissions.nuspec",
+        "readme.txt"
+      ]
+    },
+    "SunCalcNet/1.1.3": {
+      "sha512": "JBFEl+zR8988MuiAFnpBj2gSO7KxG+d2cndu/5AbIv/isafpLR694Y4zjMn0MdA8Sj+xZlIESwRCTnCDrkIbsw==",
+      "type": "package",
+      "path": "suncalcnet/1.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/SunCalcNet.dll",
+        "suncalcnet.1.1.3.nupkg.sha512",
+        "suncalcnet.nuspec"
       ]
     },
     "UrhoSharp/1.9.67": {
@@ -1546,10 +1615,10 @@
         "xamarin.android.support.viewpager.nuspec"
       ]
     },
-    "Xamarin.Essentials/1.5.2": {
-      "sha512": "qHxkrkx5jIC0X/qWhxCPZ3MuuOJm8bfCzAoUtlpOBSE4oV0JhrkTezK0A+IV+k/MeJ3zKc8FexaIXah9rlCTIw==",
+    "Xamarin.Essentials/1.5.3.2": {
+      "sha512": "BSLgDJUOPFRwTpQaftM+s4qb/MsTjrqXulEYDOcK6KF3i0Orf75zo3RwRfqnQ8WfpoEFxW/v0jgcPWCvOMgHxg==",
       "type": "package",
-      "path": "xamarin.essentials/1.5.2",
+      "path": "xamarin.essentials/1.5.3.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1590,7 +1659,7 @@
         "lib/xamarinwatchos10/Xamarin.Essentials.pdb",
         "lib/xamarinwatchos10/Xamarin.Essentials.xml",
         "readme.txt",
-        "xamarin.essentials.1.5.2.nupkg.sha512",
+        "xamarin.essentials.1.5.3.2.nupkg.sha512",
         "xamarin.essentials.nuspec"
       ]
     }
@@ -1598,12 +1667,14 @@
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v9.0": [
       "MathNet.Numerics >= 4.11.0",
+      "Plugin.Permissions >= 6.0.1",
+      "SunCalcNet >= 1.1.3",
       "UrhoSharp >= 1.9.67",
       "UrhoSharp.ARCore >= 1.9.67",
       "Xamarin.Android.Support.Core.Utils >= 28.0.0.3",
       "Xamarin.Android.Support.CustomTabs >= 28.0.0.3",
       "Xamarin.Android.Support.Design >= 28.0.0.3",
-      "Xamarin.Essentials >= 1.5.2"
+      "Xamarin.Essentials >= 1.5.3.2"
     ]
   },
   "packageFolders": {
@@ -1648,6 +1719,14 @@
             "target": "Package",
             "version": "[4.11.0, )"
           },
+          "Plugin.Permissions": {
+            "target": "Package",
+            "version": "[6.0.1, )"
+          },
+          "SunCalcNet": {
+            "target": "Package",
+            "version": "[1.1.3, )"
+          },
           "UrhoSharp": {
             "target": "Package",
             "version": "[1.9.67, )"
@@ -1670,7 +1749,7 @@
           },
           "Xamarin.Essentials": {
             "target": "Package",
-            "version": "[1.5.2, )"
+            "version": "[1.5.3.2, )"
           }
         }
       }

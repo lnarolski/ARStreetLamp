@@ -19,6 +19,9 @@ using Java.Lang;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.Content;
+using Plugin.Permissions;
+using Android.Locations;
+using SunCalcNet;
 
 namespace ARStreetLamp
 {
@@ -34,6 +37,8 @@ namespace ARStreetLamp
         private int hudScreenNum = 0;
         private int lastHudScreenNum = 2;
         private Toast toast;
+        private float sunAltitudeDeg;
+        private float sunAzimuthDeg;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -59,6 +64,32 @@ namespace ARStreetLamp
             prevControlsScreenButton.Click += PrevControlsScreenButton_Click;
             nextControlsScreenButton.Click += NextControlsScreenButton_Click;
 
+            // Calculating sun position
+            LocationManager locationManager = (LocationManager) GetSystemService(LocationService);
+            string bestProvider = locationManager.GetBestProvider(new Criteria(), true);
+
+            if (bestProvider != null)
+            {
+                Location location = locationManager.GetLastKnownLocation(bestProvider);
+
+                var date = DateTime.UtcNow;
+                var lat = location.Latitude;
+                var lng = location.Longitude;
+
+                var sunPosition = SunCalc.GetSunPosition(date, lat, lng);
+
+                sunAltitudeDeg = (float)sunPosition.Altitude * 57.2957795f;
+                sunAzimuthDeg = (float)sunPosition.Azimuth * 57.2957795f + 180.0f;
+
+                // Correcting angle
+                while (sunAzimuthDeg >= 360.0) sunAzimuthDeg -= 360.0f;
+            }
+            else
+            {
+                ShowToast("ERROR: Localisation not enabled!");
+            }
+            /////////////////////////////
+
             LaunchUrho();
 
             SeekBar heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);
@@ -80,6 +111,12 @@ namespace ARStreetLamp
 
         private async System.Threading.Tasks.Task LaunchUrho()
         {
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessCoarseLocation }, 43);
+                return;
+            }
+
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) != Permission.Granted)
             {
                 ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 42);
@@ -140,6 +177,9 @@ namespace ARStreetLamp
             arrender.lampModelsString = lampModels;
             arrender.assetManager = Assets;
 
+            arrender.sunAzimuthDeg = sunAzimuthDeg;
+            arrender.sunAltitudeDeg = sunAltitudeDeg;
+
             arrender.PrepareAR();
 
             SetTitle(Resource.String.app_name);
@@ -148,6 +188,7 @@ namespace ARStreetLamp
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }

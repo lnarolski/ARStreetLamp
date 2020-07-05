@@ -1,5 +1,6 @@
-﻿m48StreetLamp/Body.mdl,m48StreetLamp/Lenses.mdl
-celLamp/bodyLamp.xml,celLamp/lensesLamp.xml
+﻿m48StreetLamp/Body.mdl,celLamp/bodyLamp.xml
+m48StreetLamp/Lenses.mdl
+celLamp/lensesLamp.xml
 m48StreetLamp/Glass.mdl,celLamp/glassLamp.xml
 m48StreetLamp/Glass.mdl,celLamp/glassLamp.xml
 0.4674199

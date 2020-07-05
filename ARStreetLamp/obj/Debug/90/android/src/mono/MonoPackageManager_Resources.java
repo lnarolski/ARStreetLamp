@@ -4,6 +4,8 @@ public class MonoPackageManager_Resources {
 		/* We need to ensure that "ARStreetLamp.dll" comes first in this list. */
 		"ARStreetLamp.dll",
 		"MathNet.Numerics.dll",
+		"Plugin.Permissions.dll",
+		"SunCalcNet.dll",
 		"Urho.Droid.CoreAR.dll",
 		"Urho.Droid.SdlBinding.dll",
 		"Urho.Extensions.Droid.ARCore.dll",

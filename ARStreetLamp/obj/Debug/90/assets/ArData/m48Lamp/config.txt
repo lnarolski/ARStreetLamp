@@ -1,5 +1,6 @@
-﻿m48Lamp/Body.mdl,m48Lamp/Lenses.mdl
-celLamp/bodyLamp.xml,celLamp/lensesLamp.xml
+﻿m48Lamp/Body.mdl,celLamp/bodyLamp.xml
+m48Lamp/Lenses.mdl
+celLamp/lensesLamp.xml
 m48Lamp/Glass.mdl,celLamp/glassLamp.xml
 m48Lamp/Glass.mdl,celLamp/glassLamp.xml
 0.4674199
