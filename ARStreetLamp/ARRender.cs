@@ -77,6 +77,8 @@ namespace ARStreetLamp
         private float compassReadingDeg;
         private int numOfCompassReadings;
         private bool calibrateScene = true;
+        public Node SunNode;
+        public Light Sun;
 
         public ARCoreComponent ArCore { get; private set; }
         public bool HUDVisible { get; private set; } = true;
@@ -190,14 +192,14 @@ namespace ARStreetLamp
 
             InvokeOnMain(() =>
             {
-                var SunNode = scene.CreateChild(name: "SunLight");
+                SunNode = scene.CreateChild(name: "SunLight");
                 SunNode.Position = new Urho.Vector3(xLength, yLength, zLength);
-                var Sun = SunNode.CreateComponent<Light>();
+                Sun = SunNode.CreateComponent<Light>();
                 Sun.LightType = LightType.Point;
                 Sun.CastShadows = true;
-                //Sun.Brightness = 1.5f;
+                Sun.Brightness = 1.5f;
                 //Sun.Brightness = 10.5f;
-                Sun.Brightness = 1.0f;
+                //Sun.Brightness = 1.0f;
                 Sun.Range = 10000f;
                 Sun.ShadowResolution = 4;
 
@@ -388,26 +390,25 @@ namespace ARStreetLamp
                 {
                     //Light
                     //// If sun is visible
-                    //if (sunAltitudeDeg > 5.0f)
-                    //{
-                    sunAltitudeDeg = 45.0f;
-                    SetSunLight();
-                    //}
-                    //else
-                    //{
-                    //    Urho.Application.InvokeOnMain(() =>
-                    //    {
-                    //        var LightNode = scene.CreateChild(name: "DirectionalLight");
-                    //        LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
-                    //        var Light = LightNode.CreateComponent<Light>();
-                    //        Light.LightType = LightType.Directional;
-                    //        Light.CastShadows = true;
-                    //        Light.Brightness = 1.5f;
-                    //        Light.ShadowResolution = 4;
-                    //        Light.ShadowIntensity = 0.75f;
-                    //        Renderer.ShadowMapSize *= 4;
-                    //    });
-                    //}
+                    if (sunAltitudeDeg > 5.0f)
+                    {
+                        SetSunLight();
+                    }
+                    else
+                    {
+                        Urho.Application.InvokeOnMain(() =>
+                        {
+                            var LightNode = scene.CreateChild(name: "DirectionalLight");
+                            LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
+                            var Light = LightNode.CreateComponent<Light>();
+                            Light.LightType = LightType.Directional;
+                            Light.CastShadows = true;
+                            Light.Brightness = 1.5f;
+                            Light.ShadowResolution = 4;
+                            Light.ShadowIntensity = 0.75f;
+                            Renderer.ShadowMapSize *= 4;
+                        });
+                    }
 
                     calibrateScene = false;
                 }

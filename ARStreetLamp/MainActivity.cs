@@ -22,11 +22,12 @@ using Android.Content;
 using Plugin.Permissions;
 using Android.Locations;
 using SunCalcNet;
+using Android.Hardware;
 
 namespace ARStreetLamp
 {
     [Activity(Label = "ARStreetLamp", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, NumberPicker.IOnValueChangeListener
+    public class MainActivity : AppCompatActivity, NumberPicker.IOnValueChangeListener, Android.Hardware.ISensorEventListener
     {
         bool launched;
         public ARRender arrender;
@@ -63,6 +64,13 @@ namespace ARStreetLamp
             Button nextControlsScreenButton = FindViewById<Button>(Resource.Id.nextControlsScreenButton);
             prevControlsScreenButton.Click += PrevControlsScreenButton_Click;
             nextControlsScreenButton.Click += NextControlsScreenButton_Click;
+
+            // Get a SensorManager
+            var sensorService = (SensorManager)GetSystemService(SensorService);
+            // Get a Light Sensor
+            var lightSensor = sensorService.GetDefaultSensor(SensorType.Light);
+            // Register this class a listener for light sensor
+            sensorService.RegisterListener(this, lightSensor, SensorDelay.Ui);
 
             // Calculating sun position
             LocationManager locationManager = (LocationManager) GetSystemService(LocationService);
@@ -350,6 +358,25 @@ namespace ARStreetLamp
         public void OnValueChange(NumberPicker picker, int oldVal, int newVal)
         {
             
+        }
+
+        public void OnAccuracyChanged(Sensor sensor, [GeneratedEnum] SensorStatus accuracy)
+        {
+            
+        }
+
+        public void OnSensorChanged(SensorEvent e)
+        {
+            if (e.Sensor.Type == SensorType.Light)
+            {
+                var values = e.Values;
+                if (arrender != null && arrender.Sun != null && values.Count > 0)
+                {
+                    arrender.Sun.Brightness = 1.0f + values[0] / 100.0f;
+
+                    ShowToast("Light Sensor: " + values[0] + " lx");
+                }
+            }
         }
 
         public class NumOfNewLampsDialog : Android.App.DialogFragment, NumberPicker.IOnValueChangeListener

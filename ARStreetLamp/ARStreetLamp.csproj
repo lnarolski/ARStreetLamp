@@ -178,7 +178,9 @@
     <AndroidAsset Include="Assets\ArData\standardPole\Pole.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\ArData\models.txt" />
+    <AndroidAsset Include="Assets\ArData\models.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\ArData\celLamp\config.txt" />

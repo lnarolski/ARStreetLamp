@@ -5,7 +5,8 @@ public class MainActivity
 	extends android.support.v7.app.AppCompatActivity
 	implements
 		mono.android.IGCUserPeer,
-		android.widget.NumberPicker.OnValueChangeListener
+		android.widget.NumberPicker.OnValueChangeListener,
+		android.hardware.SensorEventListener
 {
 /** @hide */
 	public static final String __md_methods;
@@ -19,6 +20,8 @@ public class MainActivity
 			"n_onBackPressed:()V:GetOnBackPressedHandler\n" +
 			"n_onLowMemory:()V:GetOnLowMemoryHandler\n" +
 			"n_onValueChange:(Landroid/widget/NumberPicker;II)V:GetOnValueChange_Landroid_widget_NumberPicker_IIHandler:Android.Widget.NumberPicker/IOnValueChangeListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
+			"n_onAccuracyChanged:(Landroid/hardware/Sensor;I)V:GetOnAccuracyChanged_Landroid_hardware_Sensor_IHandler:Android.Hardware.ISensorEventListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
+			"n_onSensorChanged:(Landroid/hardware/SensorEvent;)V:GetOnSensorChanged_Landroid_hardware_SensorEvent_Handler:Android.Hardware.ISensorEventListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
 			"";
 		mono.android.Runtime.register ("ARStreetLamp.MainActivity, ARStreetLamp", MainActivity.class, __md_methods);
 	}
@@ -94,6 +97,22 @@ public class MainActivity
 	}
 
 	private native void n_onValueChange (android.widget.NumberPicker p0, int p1, int p2);
+
+
+	public void onAccuracyChanged (android.hardware.Sensor p0, int p1)
+	{
+		n_onAccuracyChanged (p0, p1);
+	}
+
+	private native void n_onAccuracyChanged (android.hardware.Sensor p0, int p1);
+
+
+	public void onSensorChanged (android.hardware.SensorEvent p0)
+	{
+		n_onSensorChanged (p0);
+	}
+
+	private native void n_onSensorChanged (android.hardware.SensorEvent p0);
 
 	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
