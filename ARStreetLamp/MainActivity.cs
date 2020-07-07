@@ -372,9 +372,9 @@ namespace ARStreetLamp
                 var values = e.Values;
                 if (arrender != null && arrender.Sun != null && values.Count > 0)
                 {
-                    arrender.Sun.Brightness = 1.0f + values[0] / 100.0f;
+                    //arrender.Sun.Brightness = 1.0f + values[0] / 100.0f;
 
-                    ShowToast("Light Sensor: " + values[0] + " lx");
+                    //ShowToast("Light Sensor: " + values[0] + " lx");
                 }
             }
         }

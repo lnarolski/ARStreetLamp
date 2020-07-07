@@ -22,6 +22,7 @@ using Android.Graphics;
 using MathNet.Numerics.LinearAlgebra;
 using System.Numerics;
 using Xamarin.Essentials;
+using Urho.Shapes;
 
 namespace ARStreetLamp
 {
@@ -74,11 +75,12 @@ namespace ARStreetLamp
         internal float sunAltitudeDeg;
         internal float sunAzimuthDeg;
         private bool gotCompassAngle;
-        private float compassReadingDeg;
-        private int numOfCompassReadings;
         private bool calibrateScene = true;
         public Node SunNode;
-        public Light Sun;
+        public StaticModel Sun;
+        private float compassInitialReadingDeg = 0.0f;
+
+        //public Light Sun;
 
         public ARCoreComponent ArCore { get; private set; }
         public bool HUDVisible { get; private set; } = true;
@@ -137,84 +139,104 @@ namespace ARStreetLamp
             Input.TouchEnd += OnTouchEnd;
         }
 
-        private async void SetSunLight()
+        private async void GetInitialCompassAngle()
         {
-            //// Get angle from magnetometer
-            ShowToast("Setting compass...");
-
-            gotCompassAngle = false;
-            Compass.ReadingChanged += Compass_ReadingChanged;
-            Compass.Start(SensorSpeed.UI);
+            Compass.ReadingChanged += Compass_InitialReadingChanged;
+            Compass.Start(SensorSpeed.Default);
 
             while (!gotCompassAngle) { };
 
-            Compass.ReadingChanged -= Compass_ReadingChanged;
+            Compass.ReadingChanged -= Compass_InitialReadingChanged;
             Compass.Stop();
+        }
 
-            ShowToast("Compass set");
-            ///
+        private async void SetSunLight()
+        {            
+            while (!gotCompassAngle) { };
+            gotCompassAngle = false;
 
-            sunAzimuthDeg -= compassReadingDeg;
+            sunAzimuthDeg -= compassInitialReadingDeg; //compassReadingDeg;
             while (sunAzimuthDeg > 360.0f) sunAzimuthDeg -= 360.0f;
             while (sunAzimuthDeg < 0.0f) sunAzimuthDeg += 360.0f;
 
-            float xLength, yLength, zLength, distanceToSun = 100.0f, a;
+            ShowToast("Sun angle: " + sunAzimuthDeg + " deg");
 
-            a = (float)System.Math.Cos(sunAltitudeDeg) * distanceToSun;
-            yLength = (float)System.Math.Sin(sunAltitudeDeg) * distanceToSun;
+            float xLength, yLength, zLength, distanceToSun = 5.0f, a;
+
+            a = (float)System.Math.Cos(sunAltitudeDeg * MathF.PI / 180.0f) * distanceToSun;
+            yLength = (float)System.Math.Sin(sunAltitudeDeg * MathF.PI / 180.0f) * distanceToSun;
 
             if (sunAzimuthDeg >= 0.0f && sunAzimuthDeg < 90.0f)
             {
-                xLength = System.MathF.Sin(sunAzimuthDeg) * a;
-                zLength = System.MathF.Cos(sunAzimuthDeg) * a;
+                xLength = System.MathF.Sin(sunAzimuthDeg * MathF.PI / 180.0f) * a;
+                zLength = System.MathF.Cos(sunAzimuthDeg * MathF.PI / 180.0f) * a;
             }
             else if (sunAzimuthDeg >= 90.0f && sunAzimuthDeg < 180.0f)
             {
                 sunAzimuthDeg -= 90.0f;
 
-                xLength = System.MathF.Cos(sunAzimuthDeg) * a;
-                zLength = System.MathF.Sin(sunAzimuthDeg) * a * -1;
+                xLength = System.MathF.Cos(sunAzimuthDeg * MathF.PI / 180.0f) * a;
+                zLength = System.MathF.Sin(sunAzimuthDeg * MathF.PI / 180.0f) * a * -1;
             }
             else if (sunAzimuthDeg >= 180.0f && sunAzimuthDeg < 270.0f)
             {
                 sunAzimuthDeg -= 180.0f;
 
-                xLength = System.MathF.Sin(sunAzimuthDeg) * a * -1;
-                zLength = System.MathF.Cos(sunAzimuthDeg) * a * -1;
+                xLength = System.MathF.Sin(sunAzimuthDeg * MathF.PI / 180.0f) * a * -1;
+                zLength = System.MathF.Cos(sunAzimuthDeg * MathF.PI / 180.0f) * a * -1;
             }
             else
             {
                 sunAzimuthDeg -= 270.0f;
 
-                xLength = System.MathF.Cos(sunAzimuthDeg) * a * -1;
-                zLength = System.MathF.Sin(sunAzimuthDeg) * a;
+                xLength = System.MathF.Cos(sunAzimuthDeg * MathF.PI / 180.0f) * a * -1;
+                zLength = System.MathF.Sin(sunAzimuthDeg * MathF.PI / 180.0f) * a;
             }
 
             InvokeOnMain(() =>
             {
                 SunNode = scene.CreateChild(name: "SunLight");
                 SunNode.Position = new Urho.Vector3(xLength, yLength, zLength);
-                Sun = SunNode.CreateComponent<Light>();
-                Sun.LightType = LightType.Point;
-                Sun.CastShadows = true;
-                Sun.Brightness = 1.5f;
-                //Sun.Brightness = 10.5f;
-                //Sun.Brightness = 1.0f;
-                Sun.Range = 10000f;
-                Sun.ShadowResolution = 4;
+                SunNode.SetScale(0.5f);
+                Sun = SunNode.CreateComponent<Sphere>();
+                var material = new Material();
+                material.SetShaderParameter("MatDiffColor", new Urho.Vector4(255, 0, 0, 1.0f));
+                Sun.Material = material;
 
-                ShowToast("Sun set");
+                var CenterNode = scene.CreateChild(name: "Center");
+                CenterNode.Position = new Urho.Vector3(0, 0, 0);
+                CenterNode.SetScale(0.5f);
+                var CenterNodeModel = CenterNode.CreateComponent<Sphere>();
+                var CenterNodeModelMaterial = new Material();
+                CenterNodeModelMaterial.SetShaderParameter("MatDiffColor", new Urho.Vector4(0, 255, 0, 1.0f));
+                CenterNodeModel.Material = CenterNodeModelMaterial;
+
+                var CenterNode2 = scene.CreateChild(name: "Center2");
+                CenterNode2.Position = new Urho.Vector3(0, 0, 1.0f);
+                CenterNode2.SetScale(0.25f);
+                var CenterNodeModel2 = CenterNode2.CreateComponent<Sphere>();
+                var CenterNodeModelMaterial2 = new Material();
+                CenterNodeModelMaterial2.SetShaderParameter("MatDiffColor", new Urho.Vector4(0, 255, 255, 1.0f));
+                CenterNodeModel2.Material = CenterNodeModelMaterial2;
+
+                //Sun = SunNode.CreateComponent<Light>();
+                //Sun.LightType = LightType.Point;
+                //Sun.CastShadows = true;
+                //Sun.Brightness = 1.5f;
+                ////Sun.Brightness = 10.5f;
+                ////Sun.Brightness = 1.0f;
+                //Sun.Range = 10000f;
+                //Sun.ShadowResolution = 4;
+
+                //ShowToast("Sun set");
             });
         }
 
-        private void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
+        private void Compass_InitialReadingChanged(object sender, CompassChangedEventArgs e)
         {
-            compassReadingDeg = (float)e.Reading.HeadingMagneticNorth;
+            compassInitialReadingDeg = (float)e.Reading.HeadingMagneticNorth;
 
-            ++numOfCompassReadings;
-
-            if (numOfCompassReadings >= 5)
-                gotCompassAngle = true;
+            gotCompassAngle = true;
         }
 
         private void ARRender_UnhandledException(object sender, Urho.UnhandledExceptionEventArgs e)
@@ -346,6 +368,37 @@ namespace ARStreetLamp
         {
             currentFrame = arFrame;
 
+            if (calibrateScene)
+            {
+                gotCompassAngle = false;
+                GetInitialCompassAngle();
+
+                //Light
+                //// If sun is visible
+                //if (sunAltitudeDeg > 5.0f)
+                //{
+                SetSunLight();
+                //}
+                //else
+                //{
+
+                Urho.Application.InvokeOnMain(() =>
+                {
+                    var LightNode = scene.CreateChild(name: "DirectionalLight");
+                    LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
+                    var Light = LightNode.CreateComponent<Light>();
+                    Light.LightType = LightType.Directional;
+                    Light.CastShadows = true;
+                    Light.Brightness = 1.5f;
+                    Light.ShadowResolution = 4;
+                    Light.ShadowIntensity = 0.75f;
+                    Renderer.ShadowMapSize *= 4;
+                });
+                //}
+
+                calibrateScene = false;
+            }
+
             if (HUDVisible)
             {
                 while (editingPlanesList) { }
@@ -385,33 +438,6 @@ namespace ARStreetLamp
                 }
 
                 editingPlanesList = false;
-
-                if (calibrateScene && scenePlanes.Count > 0)
-                {
-                    //Light
-                    //// If sun is visible
-                    if (sunAltitudeDeg > 5.0f)
-                    {
-                        SetSunLight();
-                    }
-                    else
-                    {
-                        Urho.Application.InvokeOnMain(() =>
-                        {
-                            var LightNode = scene.CreateChild(name: "DirectionalLight");
-                            LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
-                            var Light = LightNode.CreateComponent<Light>();
-                            Light.LightType = LightType.Directional;
-                            Light.CastShadows = true;
-                            Light.Brightness = 1.5f;
-                            Light.ShadowResolution = 4;
-                            Light.ShadowIntensity = 0.75f;
-                            Renderer.ShadowMapSize *= 4;
-                        });
-                    }
-
-                    calibrateScene = false;
-                }
             }
 
             // Adjust our ambient light based on the light estimates ARCore provides each frame
