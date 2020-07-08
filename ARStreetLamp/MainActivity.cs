@@ -385,7 +385,7 @@ namespace ARStreetLamp
                 {
                     arrender.sunLight.Brightness = 1.0f + values[0] / 10000.0f;
 
-                    ShowToast($"Sun brightness: {arrender.sunLight.Brightness}");
+                    //ShowToast($"Sun brightness: {arrender.sunLight.Brightness}");
                 }
             }
         }
