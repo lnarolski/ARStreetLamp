@@ -23,6 +23,7 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Numerics;
 using Xamarin.Essentials;
 using Urho.Shapes;
+using MathNet.Numerics.Statistics;
 
 namespace ARStreetLamp
 {
@@ -76,11 +77,15 @@ namespace ARStreetLamp
         internal float sunAzimuthDeg;
         private bool gotCompassAngle;
         private bool calibrateScene = true;
-        public Node SunNode;
-        public StaticModel Sun;
-        private float compassInitialReadingDeg = 0.0f;
 
-        //public Light Sun;
+        public Node sunNode;
+        public StaticModel sunStaticModel;
+        public Light sunLight;
+        private Node CenterNode;
+        private Node CenterNode2;
+
+        private float compassInitialReadingDeg = 0.0f;
+        private List<float> compassInitialReadingDegList = new List<float>();
 
         public ARCoreComponent ArCore { get; private set; }
         public bool HUDVisible { get; private set; } = true;
@@ -155,13 +160,14 @@ namespace ARStreetLamp
             while (!gotCompassAngle) { };
             gotCompassAngle = false;
 
-            sunAzimuthDeg -= compassInitialReadingDeg; //compassReadingDeg;
+            sunAzimuthDeg -= compassInitialReadingDeg;
             while (sunAzimuthDeg > 360.0f) sunAzimuthDeg -= 360.0f;
             while (sunAzimuthDeg < 0.0f) sunAzimuthDeg += 360.0f;
 
-            ShowToast("Sun angle: " + sunAzimuthDeg + " deg");
+            ShowToast($"Sun angle: {sunAzimuthDeg} deg\n" +
+                      $"compassInitialReadingDeg: {compassInitialReadingDeg} deg");
 
-            float xLength, yLength, zLength, distanceToSun = 5.0f, a;
+            float xLength, yLength, zLength, distanceToSun = 100.0f, a;
 
             a = (float)System.Math.Cos(sunAltitudeDeg * MathF.PI / 180.0f) * distanceToSun;
             yLength = (float)System.Math.Sin(sunAltitudeDeg * MathF.PI / 180.0f) * distanceToSun;
@@ -195,15 +201,15 @@ namespace ARStreetLamp
 
             InvokeOnMain(() =>
             {
-                SunNode = scene.CreateChild(name: "SunLight");
-                SunNode.Position = new Urho.Vector3(xLength, yLength, zLength);
-                SunNode.SetScale(0.5f);
-                Sun = SunNode.CreateComponent<Sphere>();
+                sunNode = scene.CreateChild(name: "sunNode");
+                sunNode.Position = new Urho.Vector3(xLength, yLength, zLength);
+                sunNode.SetScale(20.0f);
+                sunStaticModel = sunNode.CreateComponent<Sphere>();
                 var material = new Material();
                 material.SetShaderParameter("MatDiffColor", new Urho.Vector4(255, 0, 0, 1.0f));
-                Sun.Material = material;
+                sunStaticModel.Material = material;
 
-                var CenterNode = scene.CreateChild(name: "Center");
+                CenterNode = scene.CreateChild(name: "Center");
                 CenterNode.Position = new Urho.Vector3(0, 0, 0);
                 CenterNode.SetScale(0.5f);
                 var CenterNodeModel = CenterNode.CreateComponent<Sphere>();
@@ -211,7 +217,7 @@ namespace ARStreetLamp
                 CenterNodeModelMaterial.SetShaderParameter("MatDiffColor", new Urho.Vector4(0, 255, 0, 1.0f));
                 CenterNodeModel.Material = CenterNodeModelMaterial;
 
-                var CenterNode2 = scene.CreateChild(name: "Center2");
+                CenterNode2 = scene.CreateChild(name: "Center2");
                 CenterNode2.Position = new Urho.Vector3(0, 0, 1.0f);
                 CenterNode2.SetScale(0.25f);
                 var CenterNodeModel2 = CenterNode2.CreateComponent<Sphere>();
@@ -219,24 +225,25 @@ namespace ARStreetLamp
                 CenterNodeModelMaterial2.SetShaderParameter("MatDiffColor", new Urho.Vector4(0, 255, 255, 1.0f));
                 CenterNodeModel2.Material = CenterNodeModelMaterial2;
 
-                //Sun = SunNode.CreateComponent<Light>();
-                //Sun.LightType = LightType.Point;
-                //Sun.CastShadows = true;
-                //Sun.Brightness = 1.5f;
-                ////Sun.Brightness = 10.5f;
-                ////Sun.Brightness = 1.0f;
-                //Sun.Range = 10000f;
-                //Sun.ShadowResolution = 4;
-
-                //ShowToast("Sun set");
+                sunLight = sunNode.CreateComponent<Light>();
+                sunLight.LightType = LightType.Point;
+                sunLight.CastShadows = true;
+                sunLight.Brightness = 1.0f;
+                sunLight.Range = 1000f;
+                sunLight.ShadowResolution = 4;
             });
         }
 
         private void Compass_InitialReadingChanged(object sender, CompassChangedEventArgs e)
         {
-            compassInitialReadingDeg = (float)e.Reading.HeadingMagneticNorth;
+            compassInitialReadingDegList.Add((float)e.Reading.HeadingMagneticNorth);
 
-            gotCompassAngle = true;
+            if (compassInitialReadingDegList.Count == 5)
+            {
+                compassInitialReadingDeg = (float) compassInitialReadingDegList.Mean();
+
+                gotCompassAngle = true;
+            }
         }
 
         private void ARRender_UnhandledException(object sender, Urho.UnhandledExceptionEventArgs e)
@@ -296,6 +303,20 @@ namespace ARStreetLamp
             HUDVisible = true;
 
             ShowPlanes();
+            ShowOrientationModels();
+        }
+
+        private void ShowOrientationModels()
+        {
+            Urho.Application.InvokeOnMain(() =>
+            {
+                if (CenterNode != null)
+                    CenterNode.Enabled = true;
+                if (CenterNode2 != null)
+                    CenterNode2.Enabled = true;
+                if (sunStaticModel != null)
+                    sunStaticModel.Enabled = true;
+            });
         }
 
         public void HidingHUD()
@@ -303,6 +324,20 @@ namespace ARStreetLamp
             HUDVisible = false;
 
             HidePlanes();
+            HideOrientationModels();
+        }
+
+        private void HideOrientationModels()
+        {
+            Urho.Application.InvokeOnMain(() =>
+            {
+                if (CenterNode != null)
+                    CenterNode.Enabled = false;
+                if (CenterNode2 != null)
+                    CenterNode2.Enabled = false;
+                if (sunStaticModel != null)
+                    sunStaticModel.Enabled = false;
+            });
         }
 
         void OnTouchBegin(TouchBeginEventArgs e)
@@ -338,18 +373,18 @@ namespace ARStreetLamp
             if (!HUDVisible)
                 return;
 
-            // multitouch scaling:
-            if (Input.NumTouches == 2)
-            {
-                scaling = true;
-                var state1 = Input.GetTouch(0);
-                var state2 = Input.GetTouch(1);
-                var distance1 = IntVector2.Distance(state1.Position, state2.Position);
-                var distance2 = IntVector2.Distance(state1.LastPosition, state2.LastPosition);
-                sceneLampModels[selectedLampModel].ScaleLamp((distance1 - distance2) / 10000f);
+            //// multitouch scaling:
+            //if (Input.NumTouches == 2)
+            //{
+            //    scaling = true;
+            //    var state1 = Input.GetTouch(0);
+            //    var state2 = Input.GetTouch(1);
+            //    var distance1 = IntVector2.Distance(state1.Position, state2.Position);
+            //    var distance2 = IntVector2.Distance(state1.LastPosition, state2.LastPosition);
+            //    sceneLampModels[selectedLampModel].ScaleLamp((distance1 - distance2) / 10000f);
 
-                ShowToast("Scale: " + sceneLampModels[selectedLampModel].lampScale);
-            }
+            //    ShowToast("Scale: " + sceneLampModels[selectedLampModel].lampScale);
+            //}
         }
 
         private void RemoveScenePlanes()
@@ -375,26 +410,26 @@ namespace ARStreetLamp
 
                 //Light
                 //// If sun is visible
-                //if (sunAltitudeDeg > 5.0f)
-                //{
-                SetSunLight();
-                //}
-                //else
-                //{
-
-                Urho.Application.InvokeOnMain(() =>
+                sunAltitudeDeg = 45.0f;
+                if (sunAltitudeDeg > 5.0f)
                 {
-                    var LightNode = scene.CreateChild(name: "DirectionalLight");
-                    LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
-                    var Light = LightNode.CreateComponent<Light>();
-                    Light.LightType = LightType.Directional;
-                    Light.CastShadows = true;
-                    Light.Brightness = 1.5f;
-                    Light.ShadowResolution = 4;
-                    Light.ShadowIntensity = 0.75f;
-                    Renderer.ShadowMapSize *= 4;
-                });
-                //}
+                    SetSunLight();
+                }
+                else
+                {
+                    Urho.Application.InvokeOnMain(() =>
+                    {
+                        var LightNode = scene.CreateChild(name: "DirectionalLight");
+                        LightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
+                        var Light = LightNode.CreateComponent<Light>();
+                        Light.LightType = LightType.Directional;
+                        Light.CastShadows = true;
+                        Light.Brightness = 1.5f;
+                        Light.ShadowResolution = 4;
+                        Light.ShadowIntensity = 0.75f;
+                        Renderer.ShadowMapSize *= 4;
+                    });
+                }
 
                 calibrateScene = false;
             }
@@ -1019,23 +1054,11 @@ namespace ARStreetLamp
                 lampLightNode.Position = ((Urho.StaticModel)components.Current).WorldBoundingBox.Center;
             }
 
-            //Light lampLightLight = lampLightNode.CreateComponent<Light>();
-            //lampLightLight.LightType = LightType.Point;
-            //lampLightLight.Length = 1;
-            //lampLightLight.Range = 0.8f;
-            //lampLightLight.Fov = 160.0f;
-            //lampLightLight.AspectRatio = 1.05f;
-            //lampLightLight.Color = new Color(255.0f, 209.0f, 163.0f, 1.0f);
-            //lampLightLight.Brightness = 0.0f;
-            //lampLightLight.CastShadows = true;
-            //lampLightLight.ShadowBias = new BiasParameters(0.0f, 0.5f);
-
             Light lampLightLight = lampLightNode.CreateComponent<Light>();
             lampLightLight.Brightness = 0.0f;
             lampLightLight.LightType = LightType.Spot;
             lampLightLight.Fov = 90.0f;
             lampLightLight.Range = 2.0f;
-            //lampLightLight.Color = new Urho.Color(255.0f, 209.0f, 163.0f, 1.0f);
             lampLightLight.Color = new Urho.Color(1.0f, 0.819607f, 0.639216f, 1.0f);
             lampLightLight.CastShadows = true;
 
@@ -1370,7 +1393,7 @@ namespace ARStreetLamp
         public Node scalablePoleElement;
         public float poleScale;
         public string name;
-        //private Node shadowNode;
+        private Node shadowNode;
 
         public PoleModel()
         {
@@ -1390,7 +1413,7 @@ namespace ARStreetLamp
                 node.Position = new Urho.Vector3(0, 0, 0.5f); // 50cm Z
                 node.SetScale(this.poleScale * 12.0f);
                 StaticModel poleElementModel = node.CreateComponent<StaticModel>();
-                poleElementModel.CastShadows = false;
+                poleElementModel.CastShadows = true;
                 poleElementModel.Model = cache.GetModel(poleModelDefinition.poleElements[j]);
                 poleElementModel.Material = cache.GetMaterial(poleModelDefinition.poleElementsMaterials[j]);
 
@@ -1400,10 +1423,11 @@ namespace ARStreetLamp
             scalableElementNode.Position = new Urho.Vector3(0, 0, 0.5f); // 50cm Z
             scalableElementNode.SetScale(this.poleScale);
 
-            //shadowNode = scalableElementNode.CreateChild();
-            //shadowNode.Scale = new Urho.Vector3(10, 0.1f, 10);
-            //shadowNode.Enabled = false;
-            //var plane = shadowNode.CreateComponent<Urho.SharpReality.TransparentPlaneWithShadows>();
+            shadowNode = scalableElementNode.CreateChild();
+            shadowNode.Scale = new Urho.Vector3(10, 1, 10);
+            shadowNode.Enabled = false;
+            var plane = shadowNode.CreateComponent<Urho.SharpReality.TransparentPlaneWithShadows>();
+            
 
             StaticModel modelScalableElement = scalableElementNode.CreateComponent<StaticModel>();
             modelScalableElement.CastShadows = true;
@@ -1433,7 +1457,7 @@ namespace ARStreetLamp
                 item.Enabled = true;
             }
             scalablePoleElement.Enabled = true;
-            //shadowNode.Enabled = true;
+            shadowNode.Enabled = true;
         }
 
         public void Hide()
@@ -1443,7 +1467,7 @@ namespace ARStreetLamp
                 item.Enabled = false;
             }
             scalablePoleElement.Enabled = false;
-            //shadowNode.Enabled = false;
+            shadowNode.Enabled = false;
         }
 
         public void Remove()
@@ -1453,8 +1477,8 @@ namespace ARStreetLamp
                 item.Remove();
                 item.Dispose();
             }
-            //shadowNode.Remove();
-            //shadowNode.Dispose();
+            shadowNode.Remove();
+            shadowNode.Dispose();
             scalablePoleElement.Remove();
             scalablePoleElement.Dispose();
         }
@@ -1467,7 +1491,7 @@ namespace ARStreetLamp
                 item.SetScale(poleScale);
             }
             scalablePoleElement.SetScale(scale);
-            //shadowNode.SetScale(scale);
+            shadowNode.SetScale(scale);
         }
 
         public void MovePole(Urho.Vector3 vector3)
@@ -1477,13 +1501,13 @@ namespace ARStreetLamp
                 item.Position = vector3;
             }
             scalablePoleElement.Position = vector3;
-            //shadowNode.Position = vector3;
+            shadowNode.Position = vector3;
         }
 
         public void ChangeHeight(Node baseNode, float yPosition)
         {
             scalablePoleElement.Scale = new Urho.Vector3(poleScale, System.Math.Abs(baseNode.Position.Y - yPosition) / 2, poleScale);
-            //shadowNode.Scale = new Urho.Vector3(1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2);
+            shadowNode.Scale = new Urho.Vector3(1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2, 1000 * System.Math.Abs(baseNode.Position.Y - yPosition) / 2);
         }
 
         public void AddToScene(ref Scene scene)

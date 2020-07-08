@@ -81,8 +81,19 @@ namespace ARStreetLamp
                 Location location = locationManager.GetLastKnownLocation(bestProvider);
 
                 var date = DateTime.UtcNow;
-                var lat = location.Latitude;
-                var lng = location.Longitude;
+                double lat, lng;
+                if (location != null)
+                {
+                    lat = location.Latitude;
+                    lng = location.Longitude;
+                }
+                else
+                {
+                    lat = 54.372158;
+                    lng = 18.638306;
+
+                    ShowToast("No location. Setting to Gdańsk.");
+                }
 
                 var sunPosition = SunCalc.GetSunPosition(date, lat, lng);
 
@@ -370,11 +381,11 @@ namespace ARStreetLamp
             if (e.Sensor.Type == SensorType.Light)
             {
                 var values = e.Values;
-                if (arrender != null && arrender.Sun != null && values.Count > 0)
+                if (arrender != null && arrender.sunStaticModel != null && values.Count > 0)
                 {
-                    //arrender.Sun.Brightness = 1.0f + values[0] / 100.0f;
+                    arrender.sunLight.Brightness = 1.0f + values[0] / 10000.0f;
 
-                    //ShowToast("Light Sensor: " + values[0] + " lx");
+                    ShowToast($"Sun brightness: {arrender.sunLight.Brightness}");
                 }
             }
         }
