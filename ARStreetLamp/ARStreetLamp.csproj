@@ -93,6 +93,7 @@
     <AndroidAsset Include="Assets\ArData\m48StreetLamp\Lenses.mdl" />
     <AndroidAsset Include="Assets\ArData\m48StreetLamp\Body.mdl" />
     <AndroidAsset Include="Assets\ArData\Shaders\GLSL\PlaneTile.glsl" />
+    <AndroidAsset Include="Assets\ArData\ARModels\ShadowFloorObject.mdl" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -200,6 +201,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\ArData\PlaneTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\ArData\ARMaterials\ShadowBackground.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\ArData\ARTechniques\ShadowTechnique.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

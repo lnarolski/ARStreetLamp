@@ -177,6 +177,8 @@ namespace ARStreetLamp
                     ResourcePaths = new string[] { "ArData" }
                 });
 
+            arrender.Renderer.ReuseShadowMaps = false;
+
             arrender.poleButton = FindViewById<ToggleButton>(Resource.Id.poleButton);
             arrender.lightButton = FindViewById<ToggleButton>(Resource.Id.lightButton);
             arrender.heightSeekBar = FindViewById<SeekBar>(Resource.Id.heightSeekBar);

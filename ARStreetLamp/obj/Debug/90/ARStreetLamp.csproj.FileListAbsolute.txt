@@ -1,6 +1,3 @@
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\MenuItemCompat_OnActionExpandListenerImplementor.java
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.arm64-v8a.s
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.armeabi-v7a-shared.inc
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\ARStreetLamp.dll
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\ARStreetLamp.pdb
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\bin\Debug\pl.lnarolski.arstreetlamp.apk
@@ -160,9 +157,11 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\asse
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\assets\Xamarin.Android.Support.ViewPager.dll
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\assets\Xamarin.Essentials.dll
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\assets\Xamarin.Essentials.pdb
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.arm64-v8a.s
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.armeabi-v7a.s
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.x86.s
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.x86_64.s
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.armeabi-v7a-shared.inc
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\typemaps.shared.inc
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\AndroidManifest.xml
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\__environment__.txt
@@ -233,6 +232,7 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\ActionProvider_SubUiVisibilityListenerImplementor.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\ActionProvider_VisibilityListenerImplementor.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\AsyncLayoutInflater_OnInflateFinishedListenerImplementor.java
+C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\MenuItemCompat_OnActionExpandListenerImplementor.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\OnApplyWindowInsetsListenerImplementor.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\ViewPager_OnAdapterChangeListenerImplementor.java
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\android\src\mono\android\support\v4\view\ViewPager_OnPageChangeListenerImplementor.java
@@ -286,4 +286,3 @@ C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_Conve
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GenerateJavaStubs.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\stamp\_ResolveLibraryProjectImports.stamp
-C:\Users\Lukasz\source\repos\ARStreetLamp\ARStreetLamp\obj\Debug\90\ARStreetLamp.csprojAssemblyReference.cache
