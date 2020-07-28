@@ -385,7 +385,7 @@ namespace ARStreetLamp
                 var values = e.Values;
                 if (arrender != null && arrender.sunStaticModel != null && values.Count > 0)
                 {
-                    arrender.sunLight.Brightness = 1.0f + values[0] / 10000.0f;
+                    //arrender.sunLight.Brightness = 1.0f + values[0] / 10000.0f;
 
                     //ShowToast($"Sun brightness: {arrender.sunLight.Brightness}");
                 }

@@ -37,7 +37,7 @@ application_config:
 	/* uses_assembly_preload */
 	.byte	1
 	/* is_a_bundled_app */
-	.byte	0
+	.byte	1
 	/* broken_exception_transitions */
 	.byte	0
 	/* instant_run_enabled */
@@ -92,7 +92,7 @@ mono_aot_mode_name:
 	.section	.rodata.env.str.8,"aMS",%progbits,1
 	.type	.L.env.str.8, %object
 .L.env.str.8:
-	.asciz	"55d9a3cd-1451-41e7-85e7-f64112e4e3ac"
+	.asciz	"ba8cc855-d699-4e9e-8de8-4a3147ec87a1"
 	.size	.L.env.str.8, 37
 	.section	.rodata.env.str.9,"aMS",%progbits,1
 	.type	.L.env.str.9, %object

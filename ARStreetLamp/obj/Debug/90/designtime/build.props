@@ -1,4 +1,4 @@
-bundleassemblies=false
+bundleassemblies=true
 aotassemblies=false
 androidaotmode=none
 androidembedprofilers=

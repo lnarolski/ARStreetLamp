@@ -86,6 +86,7 @@ namespace ARStreetLamp
 
         private float compassInitialReadingDeg = 0.0f;
         private List<float> compassInitialReadingDegList = new List<float>();
+        private int maxCompassReading = 10;
 
         public ARCoreComponent ArCore { get; private set; }
         public bool HUDVisible { get; private set; } = true;
@@ -147,12 +148,99 @@ namespace ARStreetLamp
         private async void GetInitialCompassAngle()
         {
             Compass.ReadingChanged += Compass_InitialReadingChanged;
-            Compass.Start(SensorSpeed.Default);
+            Compass.Start(SensorSpeed.UI);
 
             while (!gotCompassAngle) { };
 
             Compass.ReadingChanged -= Compass_InitialReadingChanged;
             Compass.Stop();
+        }
+
+
+
+        // called by the update loop
+        void OnARFrameUpdated(Com.Google.AR.Core.Frame arFrame)
+        {
+            currentFrame = arFrame;
+
+            if (calibrateScene)
+            {
+                gotCompassAngle = false;
+                GetInitialCompassAngle();
+
+                //Light
+                //// If sun is visible
+                //sunAltitudeDeg = 45.0f;
+                if (sunAltitudeDeg > 5.0f)
+                {
+                    SetSunLight();
+                }
+                else
+                {
+                    ShowToast("Sun too low, setting default light");
+
+                    Urho.Application.InvokeOnMain(() =>
+                    {
+                        var lightNode = scene.CreateChild(name: "DirectionalLight");
+                        lightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
+                        var light = lightNode.CreateComponent<Light>();
+                        light.LightType = LightType.Directional;
+                        light.CastShadows = true;
+                        light.Brightness = 1.5f;
+                        light.ShadowResolution = 4;
+                        light.ShadowIntensity = 0.1f;
+                        Renderer.ShadowMapSize *= 4;
+                    });
+                }
+
+                calibrateScene = false;
+            }
+
+            if (HUDVisible)
+            {
+                while (editingPlanesList) { }
+                editingPlanesList = true;
+
+                // Showing detected planes for placing lamp models
+                RemoveScenePlanes();
+                foreach (var p in ArCore.Session.GetAllTrackables(Java.Lang.Class.FromType(typeof(Com.Google.AR.Core.Plane))))
+                {
+                    var planeArCore = (Com.Google.AR.Core.Plane)p;
+                    var pose = planeArCore.CenterPose;
+
+                    var planeNode = new Node();
+                    var plane = planeNode.CreateComponent<StaticModel>();
+                    planeNode.Position = new Urho.Vector3(pose.Tx(), pose.Ty() - 0.1f, -pose.Tz());
+                    planeNode.Rotation = new Urho.Quaternion(0.0f, (pose.Qy() * 360.0f), 0.0f);
+                    planeNode.Scale = new Urho.Vector3(planeArCore.ExtentX, 1, planeArCore.ExtentZ);
+                    plane.Model = CoreAssets.Models.Plane;
+
+                    var tileMaterial = new Material();
+                    tileMaterial.SetTexture(TextureUnit.Diffuse, ResourceCache.GetTexture2D("PlaneTile.png"));
+                    var tech = new Technique();
+                    var pass = tech.CreatePass("alpha");
+                    pass.DepthWrite = false;
+                    pass.BlendMode = BlendMode.Alpha;
+                    pass.PixelShader = "PlaneTile";
+                    pass.VertexShader = "PlaneTile";
+                    tileMaterial.SetTechnique(0, tech);
+                    tileMaterial.SetShaderParameter("MeshColor", new Urho.Color(Randoms.Next(), 1, Randoms.Next()));
+                    tileMaterial.SetShaderParameter("MeshAlpha", 0.75f); // set 0.0f if you want to hide them
+                    tileMaterial.SetShaderParameter("MeshScale", 32.0f);
+
+                    plane.Material = tileMaterial;
+
+                    scene.AddChild(planeNode);
+                    scenePlanes.Add(planeNode);
+                }
+
+                editingPlanesList = false;
+            }
+
+            // Adjust our ambient light based on the light estimates ARCore provides each frame
+            var lightEstimate = arFrame.LightEstimate;
+            //fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
+            zone.AmbientColor = new Urho.Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
         }
 
         private async void SetSunLight()
@@ -233,9 +321,9 @@ namespace ARStreetLamp
                 var light = lightNode.CreateComponent<Light>();
                 light.LightType = LightType.Directional;
                 light.CastShadows = true;
-                light.Brightness = 1.5f;
+                light.Brightness = 2.0f;
                 light.ShadowResolution = 4;
-                light.ShadowIntensity = 0.75f;
+                light.ShadowIntensity = 0.5f;
                 Renderer.ShadowMapSize *= 4;
             });
         }
@@ -244,7 +332,7 @@ namespace ARStreetLamp
         {
             compassInitialReadingDegList.Add((float)e.Reading.HeadingMagneticNorth);
 
-            if (compassInitialReadingDegList.Count == 5)
+            if (compassInitialReadingDegList.Count == maxCompassReading)
             {
                 compassInitialReadingDeg = (float) compassInitialReadingDegList.Mean();
 
@@ -402,89 +490,6 @@ namespace ARStreetLamp
             }
 
             scenePlanes.Clear();
-        }
-
-        // called by the update loop
-        void OnARFrameUpdated(Com.Google.AR.Core.Frame arFrame)
-        {
-            currentFrame = arFrame;
-
-            if (calibrateScene)
-            {
-                gotCompassAngle = false;
-                GetInitialCompassAngle();
-
-                //Light
-                //// If sun is visible
-                //sunAltitudeDeg = 45.0f;
-                if (sunAltitudeDeg > 5.0f)
-                {
-                    SetSunLight();
-                }
-                else
-                {
-                    Urho.Application.InvokeOnMain(() =>
-                    {
-                        var lightNode = scene.CreateChild(name: "DirectionalLight");
-                        lightNode.SetDirection(new Urho.Vector3(0.75f, -1.0f, 0f));
-                        var light = lightNode.CreateComponent<Light>();
-                        light.LightType = LightType.Directional;
-                        light.CastShadows = true;
-                        light.Brightness = 1.5f;
-                        light.ShadowResolution = 4;
-                        light.ShadowIntensity = 0.1f;
-                        Renderer.ShadowMapSize *= 4;
-                    });
-                }
-
-                calibrateScene = false;
-            }
-
-            if (HUDVisible)
-            {
-                while (editingPlanesList) { }
-                editingPlanesList = true;
-
-                // Showing detected planes for placing lamp models
-                RemoveScenePlanes();
-                foreach (var p in ArCore.Session.GetAllTrackables(Java.Lang.Class.FromType(typeof(Com.Google.AR.Core.Plane))))
-                {
-                    var planeArCore = (Com.Google.AR.Core.Plane)p;
-                    var pose = planeArCore.CenterPose;
-
-                    var planeNode = new Node();
-                    var plane = planeNode.CreateComponent<StaticModel>();
-                    planeNode.Position = new Urho.Vector3(pose.Tx(), pose.Ty() - 0.1f, -pose.Tz());
-                    planeNode.Rotation = new Urho.Quaternion(0.0f, (pose.Qy() * 360.0f), 0.0f);
-                    planeNode.Scale = new Urho.Vector3(planeArCore.ExtentX, 1, planeArCore.ExtentZ);
-                    plane.Model = CoreAssets.Models.Plane;
-
-                    var tileMaterial = new Material();
-                    tileMaterial.SetTexture(TextureUnit.Diffuse, ResourceCache.GetTexture2D("PlaneTile.png"));
-                    var tech = new Technique();
-                    var pass = tech.CreatePass("alpha");
-                    pass.DepthWrite = false;
-                    pass.BlendMode = BlendMode.Alpha;
-                    pass.PixelShader = "PlaneTile";
-                    pass.VertexShader = "PlaneTile";
-                    tileMaterial.SetTechnique(0, tech);
-                    tileMaterial.SetShaderParameter("MeshColor", new Urho.Color(Randoms.Next(), 1, Randoms.Next()));
-                    tileMaterial.SetShaderParameter("MeshAlpha", 0.75f); // set 0.0f if you want to hide them
-                    tileMaterial.SetShaderParameter("MeshScale", 32.0f);
-
-                    plane.Material = tileMaterial;
-
-                    scene.AddChild(planeNode);
-                    scenePlanes.Add(planeNode);
-                }
-
-                editingPlanesList = false;
-            }
-
-            // Adjust our ambient light based on the light estimates ARCore provides each frame
-            var lightEstimate = arFrame.LightEstimate;
-            //fps.AdditionalText = lightEstimate?.PixelIntensity.ToString("F1");
-            zone.AmbientColor = new Urho.Color(1, 1, 1) * ((lightEstimate?.PixelIntensity ?? 0.2f) / 2f);
         }
 
         public void PrepareAR()
