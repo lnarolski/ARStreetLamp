@@ -220,7 +220,7 @@ namespace ARStreetLamp
                     var tech = new Technique();
                     var pass = tech.CreatePass("alpha");
                     pass.DepthWrite = false;
-                    pass.BlendMode = BlendMode.Alpha;
+                    pass.BlendMode = Urho.BlendMode.Alpha;
                     pass.PixelShader = "PlaneTile";
                     pass.VertexShader = "PlaneTile";
                     tileMaterial.SetTechnique(0, tech);

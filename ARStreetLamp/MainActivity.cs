@@ -66,15 +66,31 @@ namespace ARStreetLamp
             nextControlsScreenButton.Click += NextControlsScreenButton_Click;
 
             // Get a SensorManager
-            var sensorService = (SensorManager)GetSystemService(SensorService);
+            var sensorService = (SensorManager) GetSystemService(SensorService);
             // Get a Light Sensor
             var lightSensor = sensorService.GetDefaultSensor(SensorType.Light);
             // Register this class a listener for light sensor
             sensorService.RegisterListener(this, lightSensor, SensorDelay.Ui);
 
             // Calculating sun position
+            while (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, 43);
+            }
+
             LocationManager locationManager = (LocationManager) GetSystemService(LocationService);
-            string bestProvider = locationManager.GetBestProvider(new Criteria(), true);
+            string bestProvider;
+            var providersList = locationManager.GetProviders(true);
+            if (providersList.Contains("gps"))
+                bestProvider = "gps";
+            else if (providersList.Contains("network"))
+                bestProvider = "network";
+            else if (providersList.Contains("passive"))
+                bestProvider = "passive";
+            else if (providersList.Count != 0)
+                bestProvider = providersList[0];
+            else
+                bestProvider = null;
 
             if (bestProvider != null)
             {
@@ -130,16 +146,12 @@ namespace ARStreetLamp
 
         private async System.Threading.Tasks.Task LaunchUrho()
         {
-            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation) != Permission.Granted)
-            {
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessCoarseLocation }, 43);
-                return;
-            }
-
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) != Permission.Granted)
             {
                 ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 42);
-                return;
+
+                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) != Permission.Granted)
+                    return;
             }
 
             if (launched)
@@ -370,12 +382,12 @@ namespace ARStreetLamp
 
         public void OnValueChange(NumberPicker picker, int oldVal, int newVal)
         {
-            
+
         }
 
         public void OnAccuracyChanged(Sensor sensor, [GeneratedEnum] SensorStatus accuracy)
         {
-            
+
         }
 
         public void OnSensorChanged(SensorEvent e)

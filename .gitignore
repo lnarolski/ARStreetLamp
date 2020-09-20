@@ -12,3 +12,5 @@
 /ARStreetLamp/Assets/ArData/m48StreetLamp/Lenses.mdl
 /ARStreetLamp/Assets/ArData/m48StreetLamp/Glass.mdl
 /ARStreetLamp/Assets/ArData/m48StreetLamp/Body.mdl
+/ARStreetLamp/bin/**
+/ARStreetLamp/obj/**
