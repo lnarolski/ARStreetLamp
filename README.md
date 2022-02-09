@@ -7,3 +7,6 @@ The project has been abandoned.
 - Sunlight
 - Automatic creation of lamp installations
 - Different lamp models
+
+# More info
+[https://narolski.eu/2022/02/09/arstreetlamp-opis-projektu/](https://narolski.eu/2022/02/09/arstreetlamp-opis-projektu/)
